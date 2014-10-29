@@ -4,5 +4,7 @@
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="7.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
   <foreignModel>forms.ecore</foreignModel>
-  <genPackages prefix="Forms" disposableProviderFactory="true" ecorePackage="forms.ecore#/"/>
+  <genPackages prefix="Forms" disposableProviderFactory="true" ecorePackage="forms.ecore#/">
+    <genClasses ecoreClass="forms.ecore#//NewEClass1"/>
+  </genPackages>
 </genmodel:GenModel>
