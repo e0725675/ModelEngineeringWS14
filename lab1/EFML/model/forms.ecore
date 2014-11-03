@@ -2,9 +2,10 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="forms" nsURI="http://www.example.org/forms" nsPrefix="forms">
   <eClassifiers xsi:type="ecore:EClass" name="Entity">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newEReference" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityAttribute" upperBound="-1"
         eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityID" lowerBound="1"
+        eType="#//Id"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeTypes">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="String" lowerBound="1"
@@ -15,5 +16,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Id" eSuperTypes="#//Attribute"/>
 </ecore:EPackage>

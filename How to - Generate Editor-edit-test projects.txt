@@ -1,0 +1,5 @@
+open forms.genmodel with "EMF Generator" (or double click)
+
+in the window then right-click on the root "Forms" -> "Generate All"
+
+To start the editor go to the generated *.editor project -> META-INF->MANIFEST.MF, right-click on it and "Run As"->"Eclipse Application"

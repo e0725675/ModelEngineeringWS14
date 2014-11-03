@@ -1,6 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EFML
-Bundle-SymbolicName: EFML; singleton:=true
+Bundle-Name: %pluginName
+Bundle-SymbolicName: EFML;singleton:=true
 Bundle-Version: 0.1.0.qualifier
-Require-Bundle: org.eclipse.emf.ecore
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: forms,
+ forms.impl,
+ forms.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport
+Bundle-ActivationPolicy: lazy

@@ -1,0 +1,17 @@
+Close the Project
+
+open .project file in a text editor
+
+go to projectDescription->natures
+
+insert nature <nature>org.eclipse.sirius.nature.modelingproject</nature>
+
+natures should look like this (somewhat):
+<natures>
+	<nature>org.eclipse.sirius.nature.modelingproject</nature>
+	<nature>org.eclipse.jdt.core.javanature</nature>
+	<nature>org.eclipse.pde.PluginNature</nature>
+</natures>
+
+
+Reopen the project in Eclipse, done

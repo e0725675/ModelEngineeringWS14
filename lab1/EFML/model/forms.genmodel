@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
-    modelDirectory="/EFML/src" modelPluginID="EFML" modelName="Forms"
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/EFML/src" modelPluginID="EFML" modelName="Forms"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="7.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
   <foreignModel>forms.ecore</foreignModel>
   <genPackages prefix="Forms" disposableProviderFactory="true" ecorePackage="forms.ecore#/">
-    <genClasses ecoreClass="forms.ecore#//Publication"/>
+    <genClasses ecoreClass="forms.ecore#//Entity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Entity/entityAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Entity/entityID"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//AttributeTypes">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//AttributeTypes/String"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//AttributeTypes/type"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//PublicationVenue"/>
+    <genClasses ecoreClass="forms.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/mandatory"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Id"/>
   </genPackages>
 </genmodel:GenModel>
