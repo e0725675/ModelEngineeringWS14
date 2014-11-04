@@ -1,4 +1,4 @@
-1) To test OCL constraints you first have to generate All (open .ecore, right-click on "forms"->"Generate All")
+1) To test OCL constraints you first have to generate All (open .genmodel, right-click on "forms"->"Generate All")
 2) Then you need to right-click the .ecore->"EPackages registration"->"Re-register E-Packages into Repository"
 
 3) Then you need to open the .ecore, select an element->right-click->"Create Dynamic Instance"
