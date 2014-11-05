@@ -15,7 +15,7 @@
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="entityNameUniques" value="Entity.allInstances()->forAll(e1 | self&lt;>e1 implies self.name&lt;>e1.name)"/>
-      <details key="entityHasAttributesAndOneId" value="not(self.entityAttribute->isEmpty()) implies (self.entityAttribute->one(a : Attribute | a.isId=true))"/>
+      <details key="entityHasAttributesAndOneId" value="not(self.entityAttribute->isEmpty()) implies (self.entityAttribute->one(a | a.isId=true))"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityAttribute" upperBound="-1"
         eType="#//Attribute" containment="true"/>
@@ -61,11 +61,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Relationship">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="lowerBoundLargerZero upperBoundLargerThanMinusOne"/>
+      <details key="constraints" value="lowerBoundLargerZero upperBoundLargerThanMinusOne oppositeRelationshipPointsToThisRelationship oppositetargetEntityIsThisSourceEntity oppositeCannotBeSelf"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="lowerBoundLargerZero" value="self->forAll(self.lowerBound>=0)"/>
       <details key="upperBoundLargerThanMinusOne" value="self->forAll(self.upperBound>=-1)"/>
+      <details key="oppositeRelationshipPointsToThisRelationship" value="self.opposite&lt;>null implies (self.opposite.opposite=self)"/>
+      <details key="oppositetargetEntityIsThisSourceEntity" value="self.opposite&lt;>null implies (self.Entity=opposite.target)"/>
+      <details key="oppositeCannotBeSelf" value="self.opposite&lt;>self"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
