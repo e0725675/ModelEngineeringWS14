@@ -11,11 +11,13 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Entity">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="entityNameUniques entityHasAttributesAndOneId"/>
+      <details key="constraints" value="entityNameUniques entityHasAttributesAndOneId entityHasAttributesAndOneIdSubType superTypeNotSelf"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="entityNameUniques" value="Entity.allInstances()->forAll(e1 | self&lt;>e1 implies self.name&lt;>e1.name)"/>
-      <details key="entityHasAttributesAndOneId" value="not(self.entityAttribute->isEmpty()) implies (self.entityAttribute->one(a | a.isId=true))"/>
+      <details key="entityHasAttributesAndOneId" value="not(self.entityAttribute->isEmpty()) and self.superType=null implies (self.entityAttribute->one(a | a.isId=true))"/>
+      <details key="entityHasAttributesAndOneIdSubType" value="(not(self.entityAttribute->isEmpty()) and self.superType&lt;>null) implies (self.entityAttribute->forAll(a | a.isId=false) or (self.entityAttribute->one(a | a.isId=true)))"/>
+      <details key="superTypeNotSelf" value="self.superType&lt;>null implies self.superType&lt;>self"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityAttribute" upperBound="-1"
         eType="#//Attribute" containment="true"/>
@@ -24,16 +26,23 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="superType" eType="#//Entity"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PublicationVenue"/>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="typeNoneHasEnumerationType typeNotNoneHasNoEnumerationType"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="typeNoneHasEnumerationType" value="self.type=AttributeType::None implies self.enumerationType&lt;>null"/>
+      <details key="typeNotNoneHasNoEnumerationType" value="self.type&lt;>AttributeType::None implies self.enumerationType=null"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//AttributeType"
-        defaultValueLiteral="None"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enumerationType" eType="#//Enumeration"/>
+        defaultValueLiteral="String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//BooleanObject"
         defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enumerationType" eType="#//Enumeration"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Model">
     <eStructuralFeatures xsi:type="ecore:EReference" name="modelEntity" upperBound="-1"

@@ -27,8 +27,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/mandatory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/type"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Attribute/enumerationType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/isId"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Attribute/enumerationType"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Model/modelEntity"/>
