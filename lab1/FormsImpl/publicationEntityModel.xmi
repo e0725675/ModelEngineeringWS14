@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:forms="http://www.example.org/forms">
+  <modelEntity name="Publication">
+    <entityAttribute name="titlePublication" isId="true"/>
+    <entityAttribute name="keywords"/>
+    <entityAttribute name="abstract" type="Text"/>
+    <entityAttribute name="doi"/>
+    <entityAttribute name="year" type="Year"/>
+    <entityAttribute name="fromPage" type="Integer"/>
+    <entityAttribute name="untilPage" type="Integer"/>
+    <entityAttribute name="type" type="None" enumerationType="//@modelEnumeration.0"/>
+    <entityAttribute name="assignedFaculty" type="None" enumerationType="//@modelEnumeration.1"/>
+    <entityAttribute name="field" type="None" enumerationType="//@modelEnumeration.2"/>
+    <relationship name="authors" target="//@modelEntity.1" lowerBound="1" upperBound="-1" opposite="//@modelEntity.1/@relationship.0"/>
+    <relationship name="journal" target="//@modelEntity.2" upperBound="1"/>
+    <relationship name="book" target="//@modelEntity.3" upperBound="1"/>
+    <relationship name="proceedings" target="//@modelEntity.5" upperBound="1"/>
+  </modelEntity>
+  <modelEntity name="Person">
+    <entityAttribute name="firstname"/>
+    <entityAttribute name="lastname"/>
+    <entityAttribute name="email" isId="true"/>
+    <entityAttribute name="faculty" type="None" enumerationType="//@modelEnumeration.1"/>
+    <entityAttribute name="external" type="Boolean"/>
+    <relationship name="publications" target="//@modelEntity.0" upperBound="-1" opposite="//@modelEntity.0/@relationship.0"/>
+  </modelEntity>
+  <modelEntity name="Journal" superType="//@modelEntity.4">
+    <entityAttribute name="volumeJournal" type="Integer"/>
+    <entityAttribute name="number" type="Integer"/>
+  </modelEntity>
+  <modelEntity name="Book" superType="//@modelEntity.4">
+    <entityAttribute name="publisherBook"/>
+    <entityAttribute name="isbnBook"/>
+  </modelEntity>
+  <modelEntity name="PublicationVenue">
+    <entityAttribute name="title" isId="true"/>
+  </modelEntity>
+  <modelEntity name="Proceedings" superType="//@modelEntity.4">
+    <entityAttribute name="publisherProceedings"/>
+    <entityAttribute name="volumeProceedings" type="Integer"/>
+    <entityAttribute name="isbnProceedings"/>
+    <relationship name="editors" target="//@modelEntity.1" upperBound="-1"/>
+    <relationship name="event" target="//@modelEntity.6" lowerBound="1" upperBound="1"/>
+  </modelEntity>
+  <modelEntity name="Event">
+    <entityAttribute name="titleEvent" isId="true"/>
+    <entityAttribute name="city"/>
+    <entityAttribute name="country"/>
+    <entityAttribute name="fromDate" type="Date"/>
+    <entityAttribute name="untilDate" type="Date"/>
+    <entityAttribute name="startTime" type="Time"/>
+    <entityAttribute name="endTime" type="Time"/>
+  </modelEntity>
+  <modelEnumeration name="PublicationType">
+    <literal name="JA" value="Journal Article"/>
+    <literal name="BC" value="Book Chapter"/>
+    <literal name="CP" value="Conference Paper"/>
+    <literal name="WP" value="Workshop Paper"/>
+  </modelEnumeration>
+  <modelEnumeration name="Faculty">
+    <literal name="AP" value=" Faculty of Architecture and Planning"/>
+    <literal name="CE" value="Faculty of Civil Engineering"/>
+    <literal name="MIE" value="Faculty of Mechanical and Industrial Engineering"/>
+    <literal name="EEIT" value="Faculty of Electrical Engineering and Information Technology"/>
+    <literal name="MG" value="Faculty of Mathematics and Geoinformation"/>
+    <literal name="P" value="Faculty of Physics"/>
+    <literal name="TC" value="Faculty of Technical Chemistry"/>
+    <literal name="I" value="Faculty of Informatics"/>
+  </modelEnumeration>
+  <modelEnumeration name="ResearchField">
+    <literal name="CSE" value="Computational Science and Engineering"/>
+    <literal name="QPQT" value="Quantum Physics and Quantum Technologies"/>
+    <literal name="MM" value="Materials and Matter"/>
+    <literal name="ICT" value="Information and Communication Technology"/>
+    <literal name="EE" value="Energy and Environment"/>
+  </modelEnumeration>
+</forms:Model>

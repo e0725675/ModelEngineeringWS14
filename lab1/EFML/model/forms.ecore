@@ -87,7 +87,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="lowerBoundLargerZero" value="self->forAll(self.lowerBound>=0)"/>
       <details key="lowerBoundIsLessThanUpperBound" value="self.upperBound&lt;>-1 implies self.upperBound > self.lowerBound"/>
-      <details key="upperBoundLargerThanMinusOne" value="self->forAll(self.upperBound>=-1)"/>
+      <details key="upperBoundLargerThanMinusOne" value="self->forAll(self.upperBound = -1 or self.upperBound > 0)"/>
       <details key="oppositeRelationshipPointsToThisRelationship" value="self.opposite&lt;>null implies (self.opposite.opposite=self)"/>
       <details key="oppositetargetEntityIsThisSourceEntity" value="self.opposite&lt;>null implies (self.Entity=opposite.target)"/>
       <details key="oppositeCannotBeSelf" value="self.opposite&lt;>self"/>
