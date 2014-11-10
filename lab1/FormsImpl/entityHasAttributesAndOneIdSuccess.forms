@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:forms="http://www.example.org/forms">
+  <modelEntity name="hasAttributes">
+    <entityAttribute name="myID" type="Integer" isId="true"/>
+    <entityAttribute name="myAttribute"/>
+  </modelEntity>
+</forms:Model>

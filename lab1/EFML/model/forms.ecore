@@ -16,7 +16,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="entityNameUniques" value="Entity.allInstances()->forAll(e1 | self&lt;>e1 implies self.name&lt;>e1.name)"/>
       <details key="entityHasAttributesAndOneId" value="not(self.entityAttribute->isEmpty()) and self.superType=null implies (self.entityAttribute->one(a | a.isId=true))"/>
-      <details key="entityHasAttributesAndOneIdSubType" value="(not(self.entityAttribute->isEmpty()) and self.superType&lt;>null) implies (self.entityAttribute->forAll(a | a.isId=false) or (self.entityAttribute->one(a | a.isId=true)))"/>
+      <details key="entityHasAttributesAndOneIdSubType" value="(not(self.entityAttribute->isEmpty()) and self.superType&lt;>null) implies (self.entityAttribute->forAll(a | a.isId=false))"/>
       <details key="superTypeNotSelf" value="self.superType&lt;>null implies self.superType&lt;>self"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityAttribute" upperBound="-1"
