@@ -83,7 +83,7 @@
   </modelForm>
   <modelForm name="Person" title="Person" description="" formEntity="//@modelEntity.1">
     <pages title="Person Details">
-      <pageElements xsi:type="forms:TextFields" label="First name" elementID="15" attributeRef="//@modelEntity.1/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="First name" elementID="15" attributeRef="//@modelEntity.6/@entityAttribute.4" format="^[a-zA-Z -]+$"/>
       <pageElements xsi:type="forms:TextFields" label="Last name" elementID="16" attributeRef="//@modelEntity.1/@entityAttribute.1" format="^[a-zA-Z -]+$"/>
       <pageElements xsi:type="forms:TextFields" label="E-Mail" elementID="17" attributeRef="//@modelEntity.1/@entityAttribute.2" format="^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$"/>
       <pageElements xsi:type="forms:SelectionFields" label="Faculty external" elementID="18" value="" attributeRef="//@modelEntity.1/@entityAttribute.4"/>
@@ -148,10 +148,10 @@
     <literal name="ICT" value="Information and Communication Technology"/>
     <literal name="EE" value="Energy and Environment"/>
   </modelEnumeration>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="1 Journal Show JA" type="Show" targetPage="//@modelForm.0/@pages.2" value="JA" attributeToCompare="8"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="2 Book Show BC" type="Show" targetPage="//@modelForm.0/@pages.3" value="BC" attributeToCompare="8"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3 Publication type CP" value="CP" attributeToCompare="8"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3 Publication type WP" value="WP" attributeToCompare="8"/>
-  <modelCondition xsi:type="forms:CompositeCondition" conditionID="3 Composite" type="Show" targetPage="//@modelForm.0/@pages.4" operatorType="OR" child1="3 Publication type CP" child2="3 Publication type WP"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="4 faculty hidden" targetPageElement="19" value="true" attributeToCompare="18"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="1JournalShowJA" type="Show" targetPage="//@modelForm.0/@pages.2" value="JA" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="2BookShowBC" type="Show" targetPage="//@modelForm.0/@pages.3" value="BC" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3PublicationTypeCP" value="CP" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3PublicationTypeWP" value="WP" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:CompositeCondition" conditionID="3Composite" type="Show" targetPage="//@modelForm.0/@pages.4" operatorType="OR" child2="3PublicationTypeWP"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="4FacultyHidden" targetPageElement="19" value="true" attributeToCompare="18"/>
 </forms:Model>
