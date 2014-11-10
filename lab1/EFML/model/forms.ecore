@@ -86,7 +86,7 @@
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="lowerBoundLargerZero" value="self->forAll(self.lowerBound>=0)"/>
-      <details key="lowerBoundIsLessThanUpperBound" value="self.upperBound&lt;>-1 implies self.upperBound > self.lowerBound"/>
+      <details key="lowerBoundIsLessThanUpperBound" value="self.upperBound&lt;>-1 implies self.upperBound >= self.lowerBound"/>
       <details key="upperBoundLargerThanMinusOne" value="self->forAll(self.upperBound = -1 or self.upperBound > 0)"/>
       <details key="oppositeRelationshipPointsToThisRelationship" value="self.opposite&lt;>null implies (self.opposite.opposite=self)"/>
       <details key="oppositetargetEntityIsThisSourceEntity" value="self.opposite&lt;>null implies (self.Entity=opposite.target)"/>
@@ -105,11 +105,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Form">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="formNameUnique attributesFromFormEntity"/>
+      <details key="constraints" value="formNameUnique attributesFromFormEntity relationshipsFromFormEntity"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="formNameUnique" value="Form.allInstances()->forAll(f1 | self&lt;>f1 implies self.name&lt;>f1.name)"/>
       <details key="attributesFromFormEntity" value="self.pages->forAll(pa |&#xA;&#x9;&#x9;&#x9;pa.pageElements->select(&#xA;&#x9;&#x9;&#x9;&#x9;oclIsKindOf(AttributePageElement)&#xA;&#x9;&#x9;&#x9;)->forAll(pa:AttributePageElement | &#xA;&#x9;&#x9;&#x9;&#x9;((self.formEntity->closure(e | e.superType)).entityAttribute)->includes(pa.attributeRef)&#xA;&#x9;&#x9;&#x9;)&#x9;&#xA;&#x9;&#x9;)"/>
+      <details key="relationshipsFromFormEntity" value="self.pages->forAll(pa |&#xA;&#x9;&#x9;&#x9;pa.pageElements->select(&#xA;&#x9;&#x9;&#x9;&#x9;oclIsKindOf(RelationshipPageElement)&#xA;&#x9;&#x9;&#x9;)->forAll(pa:RelationshipPageElement | &#xA;&#x9;&#x9;&#x9;&#x9;(self.formEntity.relationship)->includes(pa.relationshipRef)&#xA;&#x9;&#x9;&#x9;)&#x9;&#xA;&#x9;&#x9;)"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -148,12 +149,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ListRelationshipPageElement" eSuperTypes="#//RelationshipPageElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TableRelationshipPageElement" eSuperTypes="#//RelationshipPageElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="columnAttributesFromTargetEntities"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="columnAttributesFromTargetEntities" value="self.columns->forAll(col | self.relationshipRef.target.entityAttribute->includes(col.attributeReference))"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//Column" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entityAttributes" upperBound="-1"
-        eType="#//Attribute" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeReference" lowerBound="1"
         eType="#//Attribute"/>
   </eClassifiers>

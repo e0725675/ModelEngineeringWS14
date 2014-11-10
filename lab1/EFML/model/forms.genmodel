@@ -89,7 +89,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//TableRelationshipPageElement/columns"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//Column">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Column/entityAttributes"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Column/attributeReference"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//Condition">

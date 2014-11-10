@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ASCII"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:forms="http://www.example.org/forms" xsi:schemaLocation="http://www.example.org/forms ../forms.ecore">
+  <modelEntity name="a">
+    <entityAttribute name="aID" isId="true"/>
+    <relationship name="ab" target="//@modelEntity.1" upperBound="1"/>
+  </modelEntity>
+  <modelEntity name="b">
+    <entityAttribute name="bID" isId="true"/>
+    <entityAttribute name="bAtt1"/>
+  </modelEntity>
+  <modelForm name="f" description="" formEntity="//@modelEntity.0" isWelcomeForm="true">
+    <pages title="page">
+      <pageElements xsi:type="forms:TableRelationshipPageElement" label="" elementID="1" editingForm="//@modelForm.1" relationshipRef="//@modelEntity.0/@relationship.0">
+        <columns attributeReference="//@modelEntity.1/@entityAttribute.0"/>
+        <columns attributeReference="//@modelEntity.1/@entityAttribute.1"/>
+      </pageElements>
+    </pages>
+  </modelForm>
+  <modelForm name="f2" formEntity="//@modelEntity.1"/>
+</forms:Model>
