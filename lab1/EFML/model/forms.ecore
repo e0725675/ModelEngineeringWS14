@@ -104,10 +104,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Form">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="formNameUnique"/>
+      <details key="constraints" value="formNameUnique attributesFromFormEntity"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="formNameUnique" value="Form.allInstances()->forAll(f1 | self&lt;>f1 implies self.name&lt;>f1.name)"/>
+      <details key="attributesFromFormEntity" value="self.pages->forAll(pa |&#xA;&#x9;&#x9;&#x9;pa.pageElements->select(&#xA;&#x9;&#x9;&#x9;&#x9;oclIsKindOf(AttributePageElement)&#xA;&#x9;&#x9;&#x9;)->forAll(pa:AttributePageElement | &#xA;&#x9;&#x9;&#x9;&#x9;((self.formEntity->closure(e | e.superType)).entityAttribute)->includes(pa.attributeRef)&#xA;&#x9;&#x9;&#x9;)&#x9;&#xA;&#x9;&#x9;)"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

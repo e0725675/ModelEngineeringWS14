@@ -58,8 +58,8 @@
       <pageElements xsi:type="forms:TextAreas" label="Abstract" elementID="3" value="abstract" attributeRef="//@modelEntity.0/@entityAttribute.2"/>
       <pageElements xsi:type="forms:TextFields" label="DOI" elementID="4" attributeRef="//@modelEntity.0/@entityAttribute.3" format=""/>
       <pageElements xsi:type="forms:TextFields" label="Year" elementID="5" value="" attributeRef="//@modelEntity.0/@entityAttribute.4" format="^[0-9]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="From page" elementID="6" attributeRef="//@modelEntity.6/@entityAttribute.3"/>
-      <pageElements xsi:type="forms:TextFields" label="Until page" elementID="7" attributeRef="//@modelEntity.6/@entityAttribute.4"/>
+      <pageElements xsi:type="forms:TextFields" label="From page" elementID="6" attributeRef="//@modelEntity.0/@entityAttribute.5"/>
+      <pageElements xsi:type="forms:TextFields" label="Until page" elementID="7" attributeRef="//@modelEntity.0/@entityAttribute.6"/>
       <pageElements xsi:type="forms:SelectionFields" label="Publication type" elementID="8" value="" attributeRef="//@modelEntity.0/@entityAttribute.7"/>
       <pageElements xsi:type="forms:SelectionFields" label="Assigned faculty" elementID="9" attributeRef="//@modelEntity.0/@entityAttribute.8"/>
       <pageElements xsi:type="forms:SelectionFields" label="Research field" elementID="10" value="" attributeRef="//@modelEntity.0/@entityAttribute.9"/>
@@ -83,7 +83,7 @@
   </modelForm>
   <modelForm name="Person" title="Person" description="" formEntity="//@modelEntity.1">
     <pages title="Person Details">
-      <pageElements xsi:type="forms:TextFields" label="First name" elementID="15" attributeRef="//@modelEntity.6/@entityAttribute.4" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="First name" elementID="15" attributeRef="//@modelEntity.1/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
       <pageElements xsi:type="forms:TextFields" label="Last name" elementID="16" attributeRef="//@modelEntity.1/@entityAttribute.1" format="^[a-zA-Z -]+$"/>
       <pageElements xsi:type="forms:TextFields" label="E-Mail" elementID="17" attributeRef="//@modelEntity.1/@entityAttribute.2" format="^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$"/>
       <pageElements xsi:type="forms:SelectionFields" label="Faculty external" elementID="18" value="" attributeRef="//@modelEntity.1/@entityAttribute.4"/>
@@ -152,6 +152,6 @@
   <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="2BookShowBC" type="Show" targetPage="//@modelForm.0/@pages.3" value="BC" attributeToCompare="8"/>
   <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3PublicationTypeCP" value="CP" attributeToCompare="8"/>
   <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3PublicationTypeWP" value="WP" attributeToCompare="8"/>
-  <modelCondition xsi:type="forms:CompositeCondition" conditionID="3Composite" type="Show" targetPage="//@modelForm.0/@pages.4" operatorType="OR" child2="3PublicationTypeWP"/>
+  <modelCondition xsi:type="forms:CompositeCondition" conditionID="3Composite" type="Show" targetPage="//@modelForm.0/@pages.4" operatorType="OR" child1="3PublicationTypeCP" child2="3PublicationTypeWP"/>
   <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="4FacultyHidden" targetPageElement="19" value="true" attributeToCompare="18"/>
 </forms:Model>
