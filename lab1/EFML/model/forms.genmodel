@@ -37,11 +37,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/mandatory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/isId"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Attribute/enumerationType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Attribute/enumerationType"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Model/modelEntity"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Model/modelForm"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Model/modelEnumeration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Model/modelCondition"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//Enumeration">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Enumeration/name"/>
@@ -80,10 +82,9 @@
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//RelationshipPageElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//RelationshipPageElement/editingForm"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//RelationshipPageElement/relationshipRef"/>
     </genClasses>
-    <genClasses ecoreClass="forms.ecore#//ListRelationshipPageElement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//ListRelationshipPageElement/entities"/>
-    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//ListRelationshipPageElement"/>
     <genClasses ecoreClass="forms.ecore#//TableRelationshipPageElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//TableRelationshipPageElement/columns"/>
     </genClasses>

@@ -41,14 +41,23 @@
         defaultValueLiteral="String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//BooleanObject"
         defaultValueLiteral="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enumerationType" eType="#//Enumeration"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enumerationType" eType="#//Enumeration"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Model">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="oneWelcomeForm"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="oneWelcomeForm" value="self.modelForm->notEmpty() implies self.modelForm->one(f | f.isWelcomeForm=true)"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="modelEntity" upperBound="-1"
         eType="#//Entity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="modelForm" upperBound="-1"
         eType="#//Form" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelEnumeration" upperBound="-1"
+        eType="#//Enumeration" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelCondition" upperBound="-1"
+        eType="#//Condition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="AttributeType">
     <eLiterals name="String"/>
@@ -93,11 +102,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="opposite" eType="#//Relationship"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Form">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" unique="false" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" unique="false"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="formNameUnique attributesFromEntity"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="formNameUnique" value="Form.allInstances()->forAll(f1 | self&lt;>f1 implies self.name&lt;>f1.name)"/>
+      <details key="attributesFromEntity" value="self.pages->notEmpty() implies self.pages->forAll(p | p.pageElements->select(pe | pe.oclIsKindOf(AttributePageElement))->forAll(ape : AttributePageElement | self.formEntity.entityAttribute->includes(ape.attributeRef)))"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="formEntity" lowerBound="1"
         eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isWelcomeForm" lowerBound="1"
@@ -107,20 +122,19 @@
         eType="#//Page" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Page">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageElements" upperBound="-1"
         eType="#//PageElement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageElement" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementID" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//IntObject"
         iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributePageElement" abstract="true"
       eSuperTypes="#//PageElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeRef" lowerBound="1"
         eType="#//Attribute"/>
   </eClassifiers>
@@ -128,11 +142,10 @@
       eSuperTypes="#//PageElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="editingForm" lowerBound="1"
         eType="#//Form"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relationshipRef" lowerBound="1"
+        eType="#//Relationship"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ListRelationshipPageElement" eSuperTypes="#//RelationshipPageElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
-        eType="#//Entity" containment="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListRelationshipPageElement" eSuperTypes="#//RelationshipPageElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TableRelationshipPageElement" eSuperTypes="#//RelationshipPageElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//Column" containment="true"/>
@@ -162,8 +175,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeValueCondition" eSuperTypes="#//Condition"/>
   <eClassifiers xsi:type="ecore:EClass" name="CompositeCondition" eSuperTypes="#//Condition">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operatorType" unique="false"
-        lowerBound="1" eType="#//OperatorType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operatorType" lowerBound="1"
+        eType="#//OperatorType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operator" lowerBound="1"
         eType="#//Condition"/>
   </eClassifiers>
@@ -172,8 +185,7 @@
     <eLiterals name="OR"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TextFields" eSuperTypes="#//AttributePageElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="format" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="format" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TextAreas" eSuperTypes="#//AttributePageElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionFields" eSuperTypes="#//AttributePageElement"/>
