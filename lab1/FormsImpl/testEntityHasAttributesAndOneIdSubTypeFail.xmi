@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:forms="http://www.example.org/forms">
+  <modelEntity name="supertype">
+    <entityAttribute name="supertypeID" type="Integer" isId="true"/>
+    <entityAttribute name="myAttribute"/>
+  </modelEntity>
+  <modelEntity name="type" superType="//@modelEntity.0">
+    <entityAttribute name="typID" isId="true"/>
+  </modelEntity>
+</forms:Model>

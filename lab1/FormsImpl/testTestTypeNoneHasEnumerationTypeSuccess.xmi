@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:forms="http://www.example.org/forms">
+  <modelEntity name="a">
+    <entityAttribute name="id" isId="true"/>
+    <entityAttribute name="att1" type="None" enumerationType="//@modelEnumeration.0"/>
+  </modelEntity>
+  <modelEnumeration name="enum">
+    <literal name="lit" value="Literal"/>
+  </modelEnumeration>
+</forms:Model>

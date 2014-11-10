@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:forms="http://www.example.org/forms">
+  <modelEntity name="a">
+    <relationship name="ab" target="//@modelEntity.1" lowerBound="-1" upperBound="1"/>
+    <relationship name="ab2" target="//@modelEntity.1"/>
+    <relationship name="ab3" target="//@modelEntity.1" lowerBound="5" upperBound="3"/>
+  </modelEntity>
+  <modelEntity name="b"/>
+</forms:Model>
