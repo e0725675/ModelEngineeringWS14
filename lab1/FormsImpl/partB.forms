@@ -1,135 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:forms="http://www.example.org/forms">
   <modelEntity name="Publication">
-    <entityAttribute name="TitlePublication"/>
-    <entityAttribute name="Keywords"/>
-    <entityAttribute name="Abstract"/>
-    <entityAttribute name="DOI"/>
-    <entityAttribute name="Year" type="Year"/>
-    <entityAttribute name="From page"/>
-    <entityAttribute name="Until page"/>
-    <entityAttribute name="Publication type" type="None" enumerationType="//@modelEnumeration.0"/>
-    <entityAttribute name="Assigned faculty" type="None" enumerationType="//@modelEnumeration.1"/>
-    <entityAttribute name="Research field" enumerationType="//@modelEnumeration.2"/>
-    <relationship name="AuthorsPublication" target="//@modelEntity.1" upperBound="-1"/>
-    <relationship name="JournalsPublication" target="//@modelEntity.2" upperBound="-1"/>
-    <relationship name="BooksPublication" target="//@modelEntity.3" upperBound="-1"/>
-    <relationship name="ProceedingsPublication" target="//@modelEntity.4" upperBound="-1"/>
+    <entityAttribute name="titlePublication" mandatory="true" isId="true"/>
+    <entityAttribute name="keywords"/>
+    <entityAttribute name="abstract" type="Text"/>
+    <entityAttribute name="doi"/>
+    <entityAttribute name="year" type="Year"/>
+    <entityAttribute name="fromPage" type="Integer"/>
+    <entityAttribute name="untilPage" type="Integer"/>
+    <entityAttribute name="type" mandatory="true" type="None" enumerationType="//@modelEnumeration.0"/>
+    <entityAttribute name="assignedFaculty" mandatory="true" type="None" enumerationType="//@modelEnumeration.1"/>
+    <entityAttribute name="field" mandatory="true" type="None" enumerationType="//@modelEnumeration.2"/>
+    <relationship name="authors" target="//@modelEntity.1" lowerBound="1" upperBound="-1" opposite="//@modelEntity.1/@relationship.0"/>
+    <relationship name="journal" target="//@modelEntity.2" upperBound="1"/>
+    <relationship name="book" target="//@modelEntity.3" upperBound="1"/>
+    <relationship name="proceedings" target="//@modelEntity.5" upperBound="1"/>
   </modelEntity>
   <modelEntity name="Person">
-    <entityAttribute name="First name"/>
-    <entityAttribute name="Last name"/>
-    <entityAttribute name="E-Mail"/>
-    <entityAttribute name="Faculty external" type="None" enumerationType="//@modelEnumeration.1"/>
-    <entityAttribute name="Faculty" type="None" enumerationType="//@modelEnumeration.1"/>
+    <entityAttribute name="firstname" mandatory="true"/>
+    <entityAttribute name="lastname" mandatory="true"/>
+    <entityAttribute name="email" mandatory="true" isId="true"/>
+    <entityAttribute name="faculty" type="None" enumerationType="//@modelEnumeration.1"/>
+    <entityAttribute name="external" mandatory="true" type="Boolean"/>
+    <relationship name="publications" target="//@modelEntity.0" upperBound="-1" opposite="//@modelEntity.0/@relationship.0"/>
   </modelEntity>
-  <modelEntity name="Journal">
-    <entityAttribute name="TitleJournal"/>
-    <entityAttribute name="VolumeJournal"/>
-    <entityAttribute name="Number" type="Integer"/>
+  <modelEntity name="Journal" superType="//@modelEntity.4">
+    <entityAttribute name="volumeJournal" mandatory="true" type="Integer"/>
+    <entityAttribute name="number" type="Integer"/>
   </modelEntity>
-  <modelEntity name="Book">
-    <entityAttribute name="TitleBook"/>
-    <entityAttribute name="PublisherBook"/>
-    <entityAttribute name="ISBNBook"/>
+  <modelEntity name="Book" superType="//@modelEntity.4">
+    <entityAttribute name="publisherBook" mandatory="true"/>
+    <entityAttribute name="isbnBook"/>
   </modelEntity>
-  <modelEntity name="Proceedings">
-    <entityAttribute name="TitleProceedings"/>
-    <entityAttribute name="PublisherProceedings"/>
-    <entityAttribute name="VolumeProceedings"/>
-    <entityAttribute name="ISBNProceedings"/>
-    <relationship name="EditorsPublication" target="//@modelEntity.1" upperBound="-1"/>
-    <relationship name="EventsPublication" target="//@modelEntity.5" upperBound="-1"/>
+  <modelEntity name="PublicationVenue">
+    <entityAttribute name="title" mandatory="true" isId="true"/>
+  </modelEntity>
+  <modelEntity name="Proceedings" superType="//@modelEntity.4">
+    <entityAttribute name="publisherProceedings" mandatory="true"/>
+    <entityAttribute name="volumeProceedings" type="Integer"/>
+    <entityAttribute name="isbnProceedings"/>
+    <relationship name="editors" target="//@modelEntity.1" upperBound="-1"/>
+    <relationship name="event" target="//@modelEntity.6" lowerBound="1" upperBound="1"/>
   </modelEntity>
   <modelEntity name="Event">
-    <entityAttribute name="TitleEvent"/>
-    <entityAttribute name="City"/>
-    <entityAttribute name="Country"/>
-    <entityAttribute name="From date" type="Date"/>
-    <entityAttribute name="Until date" type="Date"/>
-    <entityAttribute name="Start time" type="Time"/>
-    <entityAttribute name="End time" type="Time"/>
+    <entityAttribute name="titleEvent" mandatory="true" isId="true"/>
+    <entityAttribute name="city"/>
+    <entityAttribute name="country"/>
+    <entityAttribute name="fromDate" type="Date"/>
+    <entityAttribute name="untilDate" type="Date"/>
+    <entityAttribute name="startTime" type="Time"/>
+    <entityAttribute name="endTime" type="Time"/>
   </modelEntity>
   <modelForm name="Publication" title="Publication" description="Form for scientific publications" formEntity="//@modelEntity.0">
     <pages title="Publication Details">
-      <pageElements xsi:type="forms:TextFields" label="Title" attributeRef="//@modelEntity.0/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Keywords" attributeRef="//@modelEntity.0/@entityAttribute.1" format="^([a-zA-Z]+, )+[a-zA-Z]+$"/>
-      <pageElements xsi:type="forms:TextAreas" label="Abstract" attributeRef="//@modelEntity.0/@entityAttribute.2"/>
-      <pageElements xsi:type="forms:TextFields" label="DOI" attributeRef="//@modelEntity.0/@entityAttribute.3" format=""/>
-      <pageElements xsi:type="forms:TextFields" label="Year" value="" attributeRef="//@modelEntity.0/@entityAttribute.4" format="^[0-9]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="From page" attributeRef="//@modelEntity.5/@entityAttribute.3"/>
-      <pageElements xsi:type="forms:TextFields" label="Until page" attributeRef="//@modelEntity.5/@entityAttribute.4"/>
-      <pageElements xsi:type="forms:SelectionFields" label="Publication type" value="" attributeRef="//@modelEntity.0/@entityAttribute.7"/>
-      <pageElements xsi:type="forms:SelectionFields" label="Assigned faculty" attributeRef="//@modelEntity.0/@entityAttribute.8"/>
-      <pageElements xsi:type="forms:SelectionFields" label="Research field" value="" attributeRef="//@modelEntity.0/@entityAttribute.9"/>
+      <pageElements xsi:type="forms:TextFields" label="Title" elementID="1" attributeRef="//@modelEntity.0/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Keywords" elementID="2" attributeRef="//@modelEntity.0/@entityAttribute.1" format="^([a-zA-Z]+, )+[a-zA-Z]+$"/>
+      <pageElements xsi:type="forms:TextAreas" label="Abstract" elementID="3" attributeRef="//@modelEntity.0/@entityAttribute.2"/>
+      <pageElements xsi:type="forms:TextFields" label="DOI" elementID="4" attributeRef="//@modelEntity.0/@entityAttribute.3" format=""/>
+      <pageElements xsi:type="forms:TextFields" label="Year" elementID="5" value="" attributeRef="//@modelEntity.0/@entityAttribute.4" format="^[0-9]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="From page" elementID="6" attributeRef="//@modelEntity.6/@entityAttribute.3"/>
+      <pageElements xsi:type="forms:TextFields" label="Until page" elementID="7" attributeRef="//@modelEntity.6/@entityAttribute.4"/>
+      <pageElements xsi:type="forms:SelectionFields" label="Publication type" elementID="8" value="" attributeRef="//@modelEntity.0/@entityAttribute.7"/>
+      <pageElements xsi:type="forms:SelectionFields" label="Assigned faculty" elementID="9" attributeRef="//@modelEntity.0/@entityAttribute.8"/>
+      <pageElements xsi:type="forms:SelectionFields" label="Research field" elementID="10" value="" attributeRef="//@modelEntity.0/@entityAttribute.9"/>
     </pages>
     <pages title="Authors">
-      <pageElements xsi:type="forms:TableRelationshipPageElement" label="Authors" editingForm="//@modelForm.1" relationshipRef="//@modelEntity.0/@relationship.0">
+      <pageElements xsi:type="forms:TableRelationshipPageElement" label="Authors" elementID="11" editingForm="//@modelForm.1" relationshipRef="//@modelEntity.0/@relationship.0">
         <columns attributeReference="//@modelEntity.1/@entityAttribute.0"/>
         <columns attributeReference="//@modelEntity.1/@entityAttribute.1"/>
         <columns attributeReference="//@modelEntity.1/@entityAttribute.2"/>
       </pageElements>
     </pages>
     <pages title="Journal">
-      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Journal" editingForm="//@modelForm.2" relationshipRef="//@modelEntity.0/@relationship.1"/>
+      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Journal" elementID="12" editingForm="//@modelForm.2" relationshipRef="//@modelEntity.0/@relationship.1"/>
     </pages>
     <pages title="Book">
-      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Book" editingForm="//@modelForm.3" relationshipRef="//@modelEntity.0/@relationship.2"/>
+      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Book" elementID="13" editingForm="//@modelForm.3" relationshipRef="//@modelEntity.0/@relationship.2"/>
     </pages>
     <pages title="Proceedings">
-      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Proceeding" editingForm="//@modelForm.4" relationshipRef="//@modelEntity.0/@relationship.3"/>
+      <pageElements xsi:type="forms:ListRelationshipPageElement" label="Proceeding" elementID="14" editingForm="//@modelForm.4" relationshipRef="//@modelEntity.0/@relationship.3"/>
     </pages>
   </modelForm>
   <modelForm name="Person" description="" formEntity="//@modelEntity.1">
     <pages title="Person Details">
-      <pageElements xsi:type="forms:TextFields" label="First name" attributeRef="//@modelEntity.1/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Last name" attributeRef="//@modelEntity.1/@entityAttribute.1" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="E-Mail" attributeRef="//@modelEntity.1/@entityAttribute.2" format="^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$"/>
-      <pageElements xsi:type="forms:SelectionFields" label="Faculty external" attributeRef="//@modelEntity.1/@entityAttribute.3"/>
-      <pageElements xsi:type="forms:SelectionFields" label="Faculty" attributeRef="//@modelEntity.1/@entityAttribute.4"/>
+      <pageElements xsi:type="forms:TextFields" label="First name" elementID="15" attributeRef="//@modelEntity.1/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Last name" elementID="16" attributeRef="//@modelEntity.1/@entityAttribute.1" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="E-Mail" elementID="17" attributeRef="//@modelEntity.1/@entityAttribute.2" format="^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$"/>
+      <pageElements xsi:type="forms:SelectionFields" label="Faculty external" elementID="18"/>
+      <pageElements xsi:type="forms:SelectionFields" label="Faculty" elementID="19" attributeRef="//@modelEntity.1/@entityAttribute.3"/>
     </pages>
   </modelForm>
   <modelForm name="Journal" title="Journal" description="" formEntity="//@modelEntity.2">
     <pages title="Journal Details">
-      <pageElements xsi:type="forms:TextFields" label="Title" attributeRef="//@modelEntity.2/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Volume" attributeRef="//@modelEntity.2/@entityAttribute.1" format="^[0-9]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Number" attributeRef="//@modelEntity.2/@entityAttribute.2" format="^[0-9]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Title" elementID="20" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Volume" elementID="21" attributeRef="//@modelEntity.2/@entityAttribute.0" format="^[0-9]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Number" elementID="22" attributeRef="//@modelEntity.2/@entityAttribute.1" format="^[0-9]+$"/>
     </pages>
   </modelForm>
   <modelForm name="Book" title="Book" description="" formEntity="//@modelEntity.3">
     <pages title="Book Details">
-      <pageElements xsi:type="forms:TextFields" label="Title" attributeRef="//@modelEntity.3/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Publisher" attributeRef="//@modelEntity.3/@entityAttribute.1"/>
-      <pageElements xsi:type="forms:TextFields" label="ISBN" attributeRef="//@modelEntity.3/@entityAttribute.2"/>
+      <pageElements xsi:type="forms:TextFields" label="Title" elementID="23" value="" attributeRef="//@modelEntity.4/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Publisher" elementID="24" attributeRef="//@modelEntity.3/@entityAttribute.0"/>
+      <pageElements xsi:type="forms:TextFields" label="ISBN" elementID="25" attributeRef="//@modelEntity.3/@entityAttribute.1"/>
     </pages>
   </modelForm>
-  <modelForm name="Proceedings" title="Proceedings" formEntity="//@modelEntity.4">
+  <modelForm name="Proceedings" title="Proceedings" formEntity="//@modelEntity.5">
     <pages title="Proceedings Details">
-      <pageElements xsi:type="forms:TextFields" label="Title" attributeRef="//@modelEntity.4/@entityAttribute.0" format="^[a-zA-Z -]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="Publisher" attributeRef="//@modelEntity.4/@entityAttribute.1"/>
-      <pageElements xsi:type="forms:TextFields" label="Volume" attributeRef="//@modelEntity.4/@entityAttribute.2" format="^[0-9]+$"/>
-      <pageElements xsi:type="forms:TextFields" label="ISBN" attributeRef="//@modelEntity.4/@entityAttribute.3"/>
-      <pageElements xsi:type="forms:ListRelationshipPageElement" label="" editingForm="//@modelForm.1" relationshipRef="//@modelEntity.4/@relationship.0"/>
-      <pageElements xsi:type="forms:ListRelationshipPageElement" editingForm="//@modelForm.5" relationshipRef="//@modelEntity.4/@relationship.1"/>
+      <pageElements xsi:type="forms:TextFields" label="Title" elementID="26" format="^[a-zA-Z -]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="Publisher" elementID="27" attributeRef="//@modelEntity.5/@entityAttribute.0"/>
+      <pageElements xsi:type="forms:TextFields" label="Volume" elementID="28" attributeRef="//@modelEntity.5/@entityAttribute.1" format="^[0-9]+$"/>
+      <pageElements xsi:type="forms:TextFields" label="ISBN" elementID="29" attributeRef="//@modelEntity.5/@entityAttribute.2"/>
+      <pageElements xsi:type="forms:ListRelationshipPageElement" label="" elementID="30" editingForm="//@modelForm.1" relationshipRef="//@modelEntity.5/@relationship.0"/>
+      <pageElements xsi:type="forms:ListRelationshipPageElement" elementID="31" editingForm="//@modelForm.5" relationshipRef="//@modelEntity.5/@relationship.1"/>
     </pages>
   </modelForm>
-  <modelForm name="Event" title="Event" description="" formEntity="//@modelEntity.5">
+  <modelForm name="Event" title="Event" description="" formEntity="//@modelEntity.6">
     <pages title="Event Details">
-      <pageElements xsi:type="forms:TextFields" label="Title" attributeRef="//@modelEntity.5/@entityAttribute.0"/>
-      <pageElements xsi:type="forms:TextFields" label="City" attributeRef="//@modelEntity.5/@entityAttribute.1"/>
-      <pageElements xsi:type="forms:TextFields" label="Country" attributeRef="//@modelEntity.5/@entityAttribute.2"/>
-      <pageElements xsi:type="forms:DateSelectionFields" label="From date" attributeRef="//@modelEntity.5/@entityAttribute.3"/>
-      <pageElements xsi:type="forms:DateSelectionFields" label="Until date" attributeRef="//@modelEntity.5/@entityAttribute.4"/>
-      <pageElements xsi:type="forms:TimeSelectionFields" label="Start time" attributeRef="//@modelEntity.5/@entityAttribute.5"/>
-      <pageElements xsi:type="forms:TimeSelectionFields" label="End time" attributeRef="//@modelEntity.5/@entityAttribute.6"/>
+      <pageElements xsi:type="forms:TextFields" label="Title" elementID="32" attributeRef="//@modelEntity.6/@entityAttribute.0"/>
+      <pageElements xsi:type="forms:TextFields" label="City" elementID="33" attributeRef="//@modelEntity.6/@entityAttribute.1"/>
+      <pageElements xsi:type="forms:TextFields" label="Country" elementID="34" attributeRef="//@modelEntity.6/@entityAttribute.2"/>
+      <pageElements xsi:type="forms:DateSelectionFields" label="From date" elementID="35" attributeRef="//@modelEntity.6/@entityAttribute.3"/>
+      <pageElements xsi:type="forms:DateSelectionFields" label="Until date" elementID="36" attributeRef="//@modelEntity.6/@entityAttribute.4"/>
+      <pageElements xsi:type="forms:TimeSelectionFields" label="Start time" elementID="37" attributeRef="//@modelEntity.6/@entityAttribute.5"/>
+      <pageElements xsi:type="forms:TimeSelectionFields" label="End time" elementID="38" attributeRef="//@modelEntity.6/@entityAttribute.6"/>
     </pages>
   </modelForm>
-  <modelEnumeration name="Publication type"/>
+  <modelEnumeration name="PublicationType">
+    <literal name="JA" value="Journal Article"/>
+    <literal name="BC" value="Book Chapter"/>
+    <literal name="CP" value="Conference Paper"/>
+    <literal name="WP" value="Workshop Paper"/>
+  </modelEnumeration>
   <modelEnumeration name="Faculty"/>
-  <modelEnumeration name="Research field"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="1" type="Show" targetPage="//@modelForm.0/@pages.2" targetPageElement="//@modelForm.0/@pages.0/@pageElements.7"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="2" type="Show" targetPage="//@modelForm.0/@pages.3" targetPageElement="//@modelForm.0/@pages.0/@pageElements.7"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3" targetPage="//@modelForm.0/@pages.4" targetPageElement="//@modelForm.0/@pages.0/@pageElements.7"/>
-  <modelCondition xsi:type="forms:CompositeCondition" conditionID="4" type="Show" targetPage="//@modelForm.0/@pages.4" targetPageElement="//@modelForm.0/@pages.0/@pageElements.7" operatorType="OR" operator="3"/>
-  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="5" targetPage="//@modelForm.1/@pages.0" targetPageElement="//@modelForm.1/@pages.0/@pageElements.4"/>
+  <modelEnumeration name="ResearchField"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="1 Journal Show JA" type="Show" targetPage="//@modelForm.0/@pages.2" value="JA" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="2 Book Show BC" type="Show" targetPage="//@modelForm.0/@pages.3" value="BC" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3 Publication type CP" value="CP" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="3 Publication type WP" value="WP" attributeToCompare="8"/>
+  <modelCondition xsi:type="forms:CompositeCondition" conditionID="3 Composite" type="Show" targetPage="//@modelForm.0/@pages.4" operatorType="OR" operator="3 Publication type CP 3 Publication type WP"/>
+  <modelCondition xsi:type="forms:AttributeValueCondition" conditionID="4 faculty hidden" targetPageElement="19" value="true" attributeToCompare="18"/>
 </forms:Model>

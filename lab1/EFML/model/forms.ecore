@@ -134,7 +134,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributePageElement" abstract="true"
       eSuperTypes="#//PageElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeRef" lowerBound="1"
         eType="#//Attribute"/>
   </eClassifiers>
@@ -161,8 +161,7 @@
       <details key="archetype" value="Description"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionID" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//IntObject"
-        iD="true"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String" iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//ConditionType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetPage" eType="#//Page"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetPageElement" eType="#//PageElement"/>
@@ -173,12 +172,17 @@
     <eLiterals name="Enable"/>
     <eLiterals name="Disable"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AttributeValueCondition" eSuperTypes="#//Condition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeValueCondition" eSuperTypes="#//Condition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeToCompare" unique="false"
+        lowerBound="1" eType="#//AttributePageElement"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CompositeCondition" eSuperTypes="#//Condition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operatorType" lowerBound="1"
         eType="#//OperatorType"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operator" lowerBound="1"
-        eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operator" lowerBound="2"
+        upperBound="2" eType="#//Condition"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="OperatorType">
     <eLiterals name="AND"/>
