@@ -98,10 +98,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Condition/targetPage"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Condition/targetPageElement"/>
     </genClasses>
-    <genClasses ecoreClass="forms.ecore#//AttributeValueCondition"/>
+    <genClasses ecoreClass="forms.ecore#//AttributeValueCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//AttributeValueCondition/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//AttributeValueCondition/attributeToCompare"/>
+    </genClasses>
     <genClasses ecoreClass="forms.ecore#//CompositeCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//CompositeCondition/operatorType"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//CompositeCondition/operator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//CompositeCondition/child1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//CompositeCondition/child2"/>
     </genClasses>
     <genClasses ecoreClass="forms.ecore#//TextFields">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//TextFields/format"/>
