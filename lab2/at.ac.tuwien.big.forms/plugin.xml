@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated forms -->
+      <package
+            uri="http://www.big.tuwien.ac.at/forms"
+            class="at.ac.tuwien.big.forms.FormsPackage"
+            genModel="model/forms.genmodel"/>
+   </extension>
+
+</plugin>

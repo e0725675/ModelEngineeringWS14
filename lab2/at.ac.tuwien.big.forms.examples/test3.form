@@ -1,0 +1,84 @@
+welcome form PublicationForm "Publication" handles Publication {
+	page "PublicationPage" {
+		text-field PublicationTitleField "Title" handles title,
+		text-field PublicationKeywordField "Keywords" format "^([a-zA-Z]+,)+[a-zA-Z]+$" handles keywords,
+		text-area PublicationAbstractArea "Abstract" handles abstract,
+		text-field PublicationYearField "Year" handles year,
+		text-field PublicationFromPageField "From page" handles fromPage,
+		text-field PublicationUntilPageField "Until page" handles untilPage,
+		selection-field PublicationTypeSelection "Type" handles publicationType,
+		selection-field PublicationFacultySelection "Assigned faculty" handles assignedFaculty,
+		selection-field PublicationResearchSelection "Research field" handles field
+	}
+	
+	page "Authors" {
+		table AuthorTable "Authors" handles authors {
+			column AuthorFirstNameColumn "First name" handles firstname,
+			column AuthorLastNameColumn "Last name" handles lastname,
+			column AuthorEMailNameColumn "E-Mail" handles email 
+		} edits PersonForm
+	}
+	
+	page "Proceedings" {
+		list ProceedingsList "Proceedings" handles proceedings edits ProceedingsForm 
+	} with composite-condition ProceedingsCondition: 
+			(attribute-condition ShowIfCP: publicationType == "Conference Paper" ? Show or
+			 attribute-condition ShowIfWP: publicationType == "Workshop Paper" ? Show) ? Show
+	
+	page "Journal" { 
+		list JournalList "Journal" handles journal edits JournalForm 
+	} with attribute-condition ShowIfJA: publicationType == "Journal Article" ? Show 
+	
+	page "Book" { 
+		list BookList "Book" handles book edits BookForm		
+	} with attribute-condition ShowIfBC: publicationType == "Book Chapter" ? Show
+}
+
+form PersonForm "Person" handles Person {
+	page "Person Details" { 
+		text-field FirstNameField "First name" handles firstname,
+		text-field LastNameField "Last name" handles lastname,
+		text-field EMailField "E-Mail" handles email,
+		selection-field ExternalPersonSelection "Faculty-external person" handles publicationType,
+		selection-field EmployedFacultySelection "Employed faculty" handles faculty 
+			with attribute-condition HideIfExternal: external == "true" ? Hide
+	}
+}
+
+form ProceedingsForm "Proceedings" handles Proceedings {
+	page "Proceedings Details" { 
+		text-field ProceedingsTitleField "Title" handles title,
+		text-field ProceedingsPublisherField "Publisher" handles publisher,
+		text-field ProceedingsVolumeField "Volume" handles volume,
+		text-field ProceedingsISBNField "ISBN" handles isbn,
+		list ProceedingsEditorsList "Editors" handles editors edits PersonForm,
+		list ProceedingsEventList "Event" handles event edits EventForm
+	}
+}
+
+form JournalForm "Journal" handles Journal {
+	page "Journal Details" { 
+		text-field JournalTitleField "Title" handles title,
+		text-field JournalVolumeField "Volume" handles volume,
+		text-field JournalNumberField "Number" handles number
+	}
+}
+
+form BookForm "Book" handles Book {
+	page "Book Details" { 
+		text-field BookTitleField "Title" handles title,
+		text-field BookPublisherField "Publisher" handles publisher,
+		text-field BookISBNField "ISBN" handles isbn
+	}
+}
+
+form EventForm "Event" handles Event {
+	page "Event Details" { 
+		text-field EventTitleField "Title" handles title,
+		text-field EventCityField "City" handles city,
+		text-field EventCountryField "Country" handles country,
+		date-selection-field EventFromSelection "From date" handles fromDate,
+		date-selection-field EventUntilSelection "Until date" handles untilDate,
+		time-selection-field EventAdmissionSelection "Admission from" handles admissionFrom
+	}
+}

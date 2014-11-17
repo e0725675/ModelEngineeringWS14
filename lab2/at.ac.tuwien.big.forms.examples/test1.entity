@@ -1,0 +1,95 @@
+/**
+ * 188.923: Model Engineering Lab, Assignment 2
+ * 
+ * Entity Model
+ * - Attributes with an asterisk ('*') are mandatory.
+ */
+entity Publication {
+	id title,
+	attribute title* : String,
+	attribute keywords : String,
+	attribute abstract* : Text,
+	attribute doi : String,
+	attribute year : Year,
+	attribute fromPage : Integer,
+	attribute untilPage : Integer,
+	attribute publicationType* : None : PublicationType,
+	attribute assignedFaculty* : None : Faculty,
+	attribute field* : None : ResearchField,
+	reference authors : Person[1..-1] opposite-of Person.publications,
+	reference proceedings : Proceedings[0..1],
+	reference journal : Journal[0..1],
+	reference book : Book[0..1]
+}
+
+entity Person {
+	id email,
+	attribute firstname* : String, 
+	attribute lastname* : String,
+	attribute email : Email,
+	attribute external : Boolean,
+	attribute faculty : None : Faculty,
+	reference publications : Publication[0..-1] opposite-of Publication.authors
+}
+
+entity PublicationVenue {
+	id title,
+	attribute title* : String
+}
+
+entity Proceedings extends PublicationVenue {
+	id title, // title of super-entity: PublicationVenue.title
+	attribute publisher* : String,
+	attribute volume : Integer,
+	attribute isbn : String,
+	reference event : Event[0..1], 
+	reference editors : Person[1..-1]
+}
+
+entity Journal extends PublicationVenue {
+	id title, // title of super-entity: PublicationVenue.title
+	attribute volume : Integer,
+	attribute number : Integer
+}
+
+entity Book extends PublicationVenue {
+	id title, // title of super-entity: PublicationVenue.title
+	attribute publisher* : String,
+	attribute isbn : String 
+}
+
+entity Event {
+	id title,
+	attribute title* : String,
+	attribute city : String,
+	attribute country : String,
+	attribute fromDate : Date,
+	attribute untilDate : Date,
+	attribute admissionFrom : Time 
+}
+
+enum Faculty {
+	AP = 'Faculty of Architecture and Planning',
+	CE = 'Faculty of Civil Engineering',
+	MIE = 'Faculty of Mechanical and Industrial Engineering',
+	EEIT = 'Faculty of Electrical Engineering and Information Technology',
+	MG = 'Faculty of Mathematics and Geoinformation',
+	P = 'Faculty of Physics',
+	TC = 'Faculty of Technical Chemistry',
+	I = 'Faculty of Informatics'
+}
+
+enum ResearchField {
+	CSE = 'Computational Science and Engineering',
+	QPQT = 'Quantum Physics and Quantum Technologies',
+	MM = 'Materials and Matter',
+	ICT = 'Information and Communication Technology',
+	EE = 'Energy and Environment'
+}
+
+enum PublicationType {
+	JA = 'Journal Article',
+	BC = 'Book Chapter',
+	CP = 'Conference Paper',
+	WP = 'Workshop Paper'
+}
