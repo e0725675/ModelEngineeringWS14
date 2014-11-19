@@ -1,0 +1,1 @@
+If the metamodel in an xtext file cannot be found, just edit the file somehow and save. the problem will fix itself then
