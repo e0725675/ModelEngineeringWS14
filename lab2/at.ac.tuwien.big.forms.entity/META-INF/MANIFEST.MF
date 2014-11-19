@@ -13,6 +13,19 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  at.ac.tuwien.big.forms,
- org.objectweb.asm;bundle-version="5.0.1"
+ org.objectweb.asm;bundle-version="5.0.1",
+ org.eclipse.xtext.util,
+ org.antlr.runtime,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.common.types
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: at.ac.tuwien.big.forms.entity,
+ at.ac.tuwien.big.forms.entity.services,
+ at.ac.tuwien.big.forms.entity.serializer,
+ at.ac.tuwien.big.forms.entity.parser.antlr,
+ at.ac.tuwien.big.forms.entity.parser.antlr.internal,
+ at.ac.tuwien.big.forms.entity.validation,
+ at.ac.tuwien.big.forms.entity.scoping,
+ at.ac.tuwien.big.forms.entity.generator,
+ at.ac.tuwien.big.forms.entity.formatting

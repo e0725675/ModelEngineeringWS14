@@ -1,4 +1,15 @@
-entity HalloHugo {
-	id MyId
-	attribute MyId (type String mandatory)
+entity Publication {
+	id title
+	attribute title* : String
+	reference toB : B[1..1]
+}
+
+enum PublicationType {
+	JA = 'Journal Article'
+}
+
+entity B {
+	id title
+	attribute title* : String
+	reference toPublication : Publication[1..1]
 }

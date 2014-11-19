@@ -17,12 +17,19 @@ EntityModelElement returns EntityModelElement :
 
 Enumeration : 
 	'enum' name = ID
+	'{'
+		(literals += Literal)+
+	'}'
 ;
 
-Entity : 
+Literal : 
+	name = ID '=' value=EString	
+;
+
+Entity returns Entity : 
 	'entity' name = ID '{'
 	'id' id=[Attribute|QualifiedName]
-	(features += Feature)*
+	(features += Feature)* 
 	'}'
 ;
 
@@ -32,17 +39,15 @@ Feature :
 
 Attribute returns Attribute:
 	'attribute'
-	name = ID
-	'('
-		'type' type = AttributeType
-		'mandatory' mandatory?=
-	')'
+	name = ID(mandatory?= '*')?
+	':' type = AttributeType
 ;
 
 Relationship :
-	name = ID
+	'reference' name = ID
+	':' target=[Entity|QualifiedName]
+	'['lowerBound=EInt'..'upperBound=EInt']' opposite?=[Relationship|'opposite-of']
 ;
-
 
 NamedElement :
     'name' name = EString
