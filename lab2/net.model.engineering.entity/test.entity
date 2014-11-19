@@ -1,0 +1,4 @@
+entity HalloHugo {
+	id MyId
+	attribute MyId (type String mandatory)
+}
