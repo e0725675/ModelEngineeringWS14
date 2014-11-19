@@ -7,8 +7,133 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 // Define form here
 // implement your grammar here, starting with the root element: FormModel
 
+
+FormModel :
+	(forms += Form)+
+	
+;
+
+Form :
+	(welcomeForm?='welcome')? 'form'
+	name = ID
+	title=EString
+	'handles' entity=[Entity|QualifiedName] '{'
+	(pages+=Page)*
+	'}'
+;
+Page :
+	'page' title = EString '{'
+		((pageElements+=PageElement)
+		((',')pageElements+=PageElement)*)?
+	'}'
+	('with' condition=Condition)?
+;
+Condition:
+	CompositeCondition | AttributeValueCondition
+;
+CompositeCondition returns CompositeCondition:
+	'composite-condition' conditionID=ID ':'
+	'('
+	(composedConditions+=Condition)
+	compositionType=CompositeConditionType
+	(composedConditions+=Condition)
+	')' '?' type=ConditionType
+;
+AttributeValueCondition:
+	'attribute-condition'
+	conditionID=ID ':'
+	attribute=[Attribute|QualifiedName] '=='
+	value=STRING
+	'?' type=ConditionType
+;
+enum ConditionType:
+	Hide |
+	Show |
+	Enable |
+	Disable |
+	None
+;
+enum CompositeConditionType:
+	And="and" | 
+	Or="or"
+;
+PageElement :
+	RelationshipPageElement | AttributePageElement
+;
+RelationshipPageElement: 
+	List | Table
+;
+AttributePageElement: 
+	TextField | TextArea | SelectionField | DateSelectionField | TimeSelectionField
+;
+List:
+	'list'
+	elementID=ID
+	label=STRING
+	'handles' relationship=[Relationship|QualifiedName]
+	'edits' editingForm=[Form|QualifiedName]
+	('with' condition=Condition)?
+;
+Table:
+	'table'
+	elementID=ID
+	label=STRING
+	'handles' relationship=[Relationship|QualifiedName]
+	'{'
+	((columns+=Column)
+		((',')columns+=Column)*)?
+	'}'
+	'edits' editingForm=[Form|QualifiedName]
+	('with' condition=Condition)?
+;
+Column:
+	'column'
+	elementID=ID
+	label=STRING
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+TextField:
+	'text-field'
+	elementID=ID
+	label=STRING
+	('format' format=STRING)?
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+TextArea:
+	'text-area'
+	elementID=ID
+	label=STRING
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+SelectionField:
+	'selection-field'
+	elementID=ID
+	label=STRING
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+DateSelectionField:
+	'date-selection-field'
+	elementID=ID
+	label=STRING
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+TimeSelectionField:
+	'time-selection-field'
+	elementID=ID
+	label=STRING
+	'handles' attribute=[Attribute|QualifiedName]
+	('with' condition=Condition)?
+;
+
 EInt returns ecore::EInt:
 	'-'? INT;
-
+EString returns ecore::EString:
+    STRING | ID;
+    
 QualifiedName returns ecore::EString: 
 	ID (=> '.'ID)*;

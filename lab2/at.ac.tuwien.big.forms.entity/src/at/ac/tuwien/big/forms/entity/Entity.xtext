@@ -30,9 +30,7 @@ Literal :
 Entity : 
 	'entity' name = ID ('extends' superType=[Entity|QualifiedName])? '{'
 	'id' id=[Attribute|QualifiedName]
-	(','
-	features += Feature
-	)*
+	(','features += Feature)*
 	'}'
 ;
 
@@ -43,7 +41,7 @@ Feature :
 Attribute returns Attribute:
 	'attribute'
 	name = ID(mandatory?= '*')?
-	':' type = AttributeType
+	':' type = AttributeType (':' enumeration=[Enumeration|QualifiedName])?
 ;
 
 Relationship :

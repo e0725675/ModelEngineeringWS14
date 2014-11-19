@@ -18,3 +18,4 @@ entity A {
 	id title,
 	attribute title* : String
 }
+

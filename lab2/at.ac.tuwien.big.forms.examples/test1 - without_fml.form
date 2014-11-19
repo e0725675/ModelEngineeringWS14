@@ -1,0 +1,91 @@
+/**
+ * 188.923: Model Engineering Lab, Assignment 2
+ * 
+ * Forms Model
+ * - Syntax for PageElements: 
+ *   <PageElementType> <PageElement.elementID> "<PageElement.label>"...
+ */
+ welcome form PublicationForm "Publication" handles Publication {
+	page "PublicationPage" {
+		text-field PublicationTitleField "Title" handles Publication.title,
+		text-field PublicationKeywordField "Keywords" format "^([a-zA-Z]+,)+[a-zA-Z]+$" handles Publication.keywords,
+		text-area PublicationAbstractArea "Abstract" handles Publication.abstract,
+		text-field PublicationYearField "Year" handles Publication.year,
+		text-field PublicationFromPageField "From page" handles Publication.fromPage,
+		text-field PublicationUntilPageField "Until page" handles Publication.untilPage,
+		selection-field PublicationTypeSelection "Type" handles Publication.publicationType,
+		selection-field PublicationFacultySelection "Assigned faculty" handles Publication.assignedFaculty,
+		selection-field PublicationResearchSelection "Research field" handles Publication.field
+	}
+	
+	page "Authors" {
+		table AuthorTable "Authors" handles Publication.authors {
+			column AuthorFirstNameColumn "First name" handles Person.firstname,
+			column AuthorLastNameColumn "Last name" handles Person.lastname,
+			column AuthorEMailNameColumn "E-Mail" handles Person.email 
+		} edits PersonForm
+	}
+	
+	page "Proceedings" {
+		list ProceedingsList "Proceedings" handles Publication.proceedings edits ProceedingsForm 
+	} with composite-condition ProceedingsCondition: 
+			(attribute-condition ShowIfCP: Publication.publicationType == "Conference Paper" ? Show or
+			 attribute-condition ShowIfWP: Publication.publicationType == "Workshop Paper" ? Show) ? Show
+	
+	page "Journal" { 
+		list JournalList "Journal" handles Publication.journal edits JournalForm 
+	} with attribute-condition ShowIfJA: Publication.publicationType == "Journal Article" ? Show 
+	
+	page "Book" { 
+		list BookList "Book" handles Publication.book edits BookForm		
+	} with attribute-condition ShowIfBC: Publication.publicationType == "Book Chapter" ? Show
+}
+
+form PersonForm "Person" handles Person {
+	page "Person Details" { 
+		text-field FirstNameField "First name" handles Person.firstname,
+		text-field LastNameField "Last name" handles Person.lastname,
+		text-field EMailField "E-Mail" handles Person.email,
+		selection-field ExternalPersonSelection "Faculty-external person" handles Person.external,
+		selection-field EmployedFacultySelection "Employed faculty" handles Person.faculty 
+			with attribute-condition HideIfExternal: Person.external == "true" ? Hide
+	}
+}
+
+form ProceedingsForm "Proceedings" handles Proceedings {
+	page "Proceedings Details" { 
+		text-field ProceedingsTitleField "Title" handles PublicationVenue.title,
+		text-field ProceedingsPublisherField "Publisher" handles Proceedings.publisher,
+		text-field ProceedingsVolumeField "Volume" handles Proceedings.volume,
+		text-field ProceedingsISBNField "ISBN" handles Proceedings.isbn,
+		list ProceedingsEditorsList "Editors" handles Proceedings.editors edits PersonForm,
+		list ProceedingsEventList "Event" handles Proceedings.event edits EventForm
+	}
+}
+
+form JournalForm "Journal" handles Journal {
+	page "Journal Details" { 
+		text-field JournalTitleField "Title" handles PublicationVenue.title,
+		text-field JournalVolumeField "Volume" handles Journal.volume,
+		text-field JournalNumberField "Number" handles Journal.number
+	}
+}
+
+form BookForm "Book" handles Book {
+	page "Book Details" { 
+		text-field BookTitleField "Title" handles PublicationVenue.title,
+		text-field BookPublisherField "Publisher" handles Book.publisher,
+		text-field BookISBNField "ISBN" handles Book.isbn
+	}
+}
+
+form EventForm "Event" handles Event {
+	page "Event Details" { 
+		text-field EventTitleField "Title" handles Event.title,
+		text-field EventCityField "City" handles Event.city,
+		text-field EventCountryField "Country" handles Event.country,
+		date-selection-field EventFromSelection "From date" handles Event.fromDate,
+		date-selection-field EventUntilSelection "Until date" handles Event.untilDate,
+		time-selection-field EventAdmissionSelection "Admission from" handles Event.admissionFrom
+	}
+}
