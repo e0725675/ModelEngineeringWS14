@@ -1,15 +1,20 @@
 entity Publication {
-	id title
-	attribute title* : String
-	reference toB : B[1..1]
+	id title,
+	attribute title* : String,
+	reference toB : B[1..1] opposite-of B.toPublication
 }
 
 enum PublicationType {
-	JA = 'Journal Article'
+	JA = 'Journal Article',
+	ER = 'Emergency Room'
 }
 
-entity B {
-	id title
+entity B extends A {
+	id A.title,
+	reference toPublication : Publication[1..1] opposite-of Publication.toB
+}
+
+entity A {
+	id title,
 	attribute title* : String
-	reference toPublication : Publication[1..1]
 }

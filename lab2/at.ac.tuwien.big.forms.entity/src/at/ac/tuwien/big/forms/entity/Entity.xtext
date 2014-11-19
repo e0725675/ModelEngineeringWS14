@@ -18,7 +18,8 @@ EntityModelElement returns EntityModelElement :
 Enumeration : 
 	'enum' name = ID
 	'{'
-		(literals += Literal)+
+		(literals += Literal',')*
+		literals += Literal
 	'}'
 ;
 
@@ -26,10 +27,12 @@ Literal :
 	name = ID '=' value=EString	
 ;
 
-Entity returns Entity : 
-	'entity' name = ID '{'
+Entity : 
+	'entity' name = ID ('extends' superType=[Entity|QualifiedName])? '{'
 	'id' id=[Attribute|QualifiedName]
-	(features += Feature)* 
+	(','
+	features += Feature
+	)*
 	'}'
 ;
 
@@ -46,7 +49,7 @@ Attribute returns Attribute:
 Relationship :
 	'reference' name = ID
 	':' target=[Entity|QualifiedName]
-	'['lowerBound=EInt'..'upperBound=EInt']' opposite?=[Relationship|'opposite-of']
+	'['lowerBound=EInt'..'upperBound=EInt']' ('opposite-of' opposite=[Relationship|QualifiedName] )?
 ;
 
 NamedElement :
