@@ -11,5 +11,8 @@ package at.ac.tuwien.big.forms.form.scoping;
  *
  */
 public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
-
+	// Wer macht was
+	//TODO: Tyler 1,3
+	//TODO: Clemente 2,5
+	//TODO: Lukas 4,6
 }
