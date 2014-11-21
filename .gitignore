@@ -17,3 +17,5 @@ lab2/at.ac.tuwien.big.forms.entity/src/*
 **plugin.xml_gen
 **/src-gen/
 **/xtend-gen/
+/lab2/at.ac.tuwien.big.forms.form.ui/src
+/lab2/at.ac.tuwien.big.forms.form/src
