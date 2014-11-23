@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 
+import at.ac.tuwien.big.forms.AttributePageElement;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
 import at.ac.tuwien.big.forms.Form;
@@ -37,6 +39,50 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	}
 	// Wer macht was
 	//TODO: Tyler 1,3
+		
+	/*
+	 * FML Scoping
+	 */
+
+	/**
+	 * 1) An attribute page element has to reference an attribute of the entity the containing form 
+	 *    references.
+	 *    Example: The text-field PublicationTitleField is only allowed to handle the attributes of the entity 
+	 *    Publication (title, keywords, …, fields).
+	 *
+	 * @param scope
+	 * @param ref
+	 * @return IScope
+	 */
+	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
+		ArrayList<EObject> elements = new ArrayList<EObject>();
+		Page theContainingPage = null;
+		Form thePageForm = null;
+		Entity theReferencedEntity = null; 
+		if(scope.eContainer() instanceof Page) {
+			theContainingPage = (Page)scope.eContainer();
+		}
+		
+		if(theContainingPage != null) {
+			if(theContainingPage.eContainer() instanceof Form) {
+				thePageForm = (Form)theContainingPage.eContainer();
+				if(thePageForm != null && thePageForm.getEntity() instanceof Entity) {
+					theReferencedEntity =  thePageForm.getEntity();
+					elements.add(theReferencedEntity);
+//					elements = theReferencedEntity.getFeatures();
+					this.logger.debug(elements);
+				}
+			}
+		}
+		
+		IScope retScope = IScope.NULLSCOPE;
+		if(elements != null) {
+			retScope = Scopes.scopeFor(elements); 
+		}
+		
+		return retScope;
+	}
+	
 	//TODO: Clemente 2,5
 	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
 		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__EDITING_FORM)) {
