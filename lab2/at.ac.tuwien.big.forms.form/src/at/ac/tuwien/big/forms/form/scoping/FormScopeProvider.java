@@ -3,6 +3,25 @@
  */
 package at.ac.tuwien.big.forms.form.scoping;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
+
+import at.ac.tuwien.big.forms.Entity;
+import at.ac.tuwien.big.forms.Feature;
+import at.ac.tuwien.big.forms.Form;
+import at.ac.tuwien.big.forms.FormModel;
+import at.ac.tuwien.big.forms.FormsPackage;
+import at.ac.tuwien.big.forms.List;
+import at.ac.tuwien.big.forms.Page;
+import at.ac.tuwien.big.forms.Relationship;
+import at.ac.tuwien.big.forms.RelationshipPageElement;
+
 /**
  * This class contains custom scoping description.
  * 
@@ -11,8 +30,86 @@ package at.ac.tuwien.big.forms.form.scoping;
  *
  */
 public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
+
+	public IScope getScope(EObject context, EReference reference) {
+		//log.info("getScope: context: "+context+" reference: "+reference);
+		return super.getScope(context, reference);
+	}
 	// Wer macht was
 	//TODO: Tyler 1,3
 	//TODO: Clemente 2,5
+	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
+		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__EDITING_FORM)) {
+			ArrayList<EObject> elements = new ArrayList<EObject>();
+			EObject eo_page = rpe.eContainer();
+			if (eo_page instanceof Page) {
+				//logger.info("eo_page is a Page: "+eo_page);
+				Page page = (Page)eo_page;
+				EObject eo_form = page.eContainer();
+				if (eo_form instanceof Form) {
+					EObject eo_model = eo_form.eContainer();
+					if (eo_model instanceof FormModel) {
+						FormModel fm = (FormModel)eo_model;
+						for (Form form : fm.getForms()) {
+							if (!form.equals((Form)eo_form)) {
+								elements.add(form);
+							}
+						}
+					}else {
+						logger.error("eo_model not a FormModel: "+eo_form);
+						return IScope.NULLSCOPE;
+					}
+					
+				} else {
+					logger.error("eo_form not a Form: "+eo_form);
+					return IScope.NULLSCOPE;
+				}
+			} else {
+				logger.error("eo_page not a Page: "+eo_page);
+				return IScope.NULLSCOPE;
+			}
+			//logger.info("END");
+			return Scopes.scopeFor(elements);
+		} else {
+			logger.info("scope_RelationshipPageElement_editingForm NULLSCOPE");
+			return IScope.NULLSCOPE;
+		}
+	}
+	
+	IScope scope_RelationshipPageElement_relationship(RelationshipPageElement rpe, EReference ref) {
+		//logger.info("scope_RelationshipPageElement_relationship: "+rpe.getElementID());
+		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__RELATIONSHIP)) {
+			ArrayList<EObject> elements = new ArrayList<EObject>();
+			EObject eo_page = rpe.eContainer();
+			if (eo_page instanceof Page) {
+				//logger.info("eo_page is a Page: "+eo_page);
+				Page page = (Page)eo_page;
+				EObject eo_form = page.eContainer();
+				if (eo_form instanceof Form) {
+					//logger.info("eo_form is a Form: "+eo_page);
+					Form form = (Form)eo_form;
+					for (Feature feature :form.getEntity().getFeatures()) {
+						if (feature instanceof Relationship) {
+							elements.add(feature);
+						}
+					}
+					
+					//return IScope.NULLSCOPE;
+				} else {
+					logger.error("eo_form not a Form: "+eo_form);
+					return IScope.NULLSCOPE;
+				}
+			} else {
+				logger.error("eo_page not a Page: "+eo_page);
+				return IScope.NULLSCOPE;
+			}
+			//logger.info("END");
+			return Scopes.scopeFor(elements);
+		} else {
+			logger.info("scope_RelationshipPageElement_relationship NULLSCOPE");
+			return IScope.NULLSCOPE;
+		}
+	}
+	
 	//TODO: Lukas 4,6
 }
