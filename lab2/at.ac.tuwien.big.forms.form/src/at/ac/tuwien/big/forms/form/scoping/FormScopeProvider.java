@@ -14,6 +14,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 
 import at.ac.tuwien.big.forms.AttributePageElement;
+import at.ac.tuwien.big.forms.Column;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
 import at.ac.tuwien.big.forms.Form;
@@ -23,6 +24,7 @@ import at.ac.tuwien.big.forms.List;
 import at.ac.tuwien.big.forms.Page;
 import at.ac.tuwien.big.forms.Relationship;
 import at.ac.tuwien.big.forms.RelationshipPageElement;
+import at.ac.tuwien.big.forms.Table;
 
 /**
  * This class contains custom scoping description.
@@ -55,8 +57,8 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 * @return IScope
 	 */
 	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
-//		ArrayList<EObject> elements = new ArrayList<EObject>();
 		EList<Feature> elements = null;
+		
 		Page theContainingPage = null;
 		Form thePageForm = null;
 		Entity theReferencedEntity = null; 
@@ -64,15 +66,13 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			theContainingPage = (Page)scope.eContainer();
 		}
 		
-		if(theContainingPage != null) {
-			if(theContainingPage.eContainer() instanceof Form) {
-				thePageForm = (Form)theContainingPage.eContainer();
-				if(thePageForm != null && thePageForm.getEntity() instanceof Entity) {
-					theReferencedEntity =  thePageForm.getEntity();
+		if(theContainingPage != null && theContainingPage.eContainer() instanceof Form) {
+			thePageForm = (Form)theContainingPage.eContainer();
+			if(thePageForm != null && thePageForm.getEntity() instanceof Entity) {
+				theReferencedEntity =  thePageForm.getEntity();
 //					elements.add(theReferencedEntity);
-					elements = theReferencedEntity.getFeatures();
+				elements = theReferencedEntity.getFeatures();
 //					this.logger.debug(elements);
-				}
 			}
 		}
 		
@@ -83,6 +83,17 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		
 		return retScope;
 	}
+
+	IScope scope_Column_attribute(Column scope, EReference ref) {
+		this.logger.debug("found column" + scope.toString());
+		IScope retScope = IScope.NULLSCOPE;
+//		if(elements != null) {
+//			retScope = Scopes.scopeFor(elements); 
+//		}
+		
+		return retScope;
+	}
+
 	
 	//TODO: Clemente 2,5
 	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
