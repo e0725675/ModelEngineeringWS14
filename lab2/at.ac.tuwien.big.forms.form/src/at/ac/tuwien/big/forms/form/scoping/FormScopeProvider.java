@@ -55,7 +55,8 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 * @return IScope
 	 */
 	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
-		ArrayList<EObject> elements = new ArrayList<EObject>();
+//		ArrayList<EObject> elements = new ArrayList<EObject>();
+		EList<Feature> elements = null;
 		Page theContainingPage = null;
 		Form thePageForm = null;
 		Entity theReferencedEntity = null; 
@@ -68,9 +69,9 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 				thePageForm = (Form)theContainingPage.eContainer();
 				if(thePageForm != null && thePageForm.getEntity() instanceof Entity) {
 					theReferencedEntity =  thePageForm.getEntity();
-					elements.add(theReferencedEntity);
-//					elements = theReferencedEntity.getFeatures();
-					this.logger.debug(elements);
+//					elements.add(theReferencedEntity);
+					elements = theReferencedEntity.getFeatures();
+//					this.logger.debug(elements);
 				}
 			}
 		}
