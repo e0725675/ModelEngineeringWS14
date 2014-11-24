@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
@@ -16,6 +17,8 @@ import org.eclipse.xtext.scoping.Scopes;
 import at.ac.tuwien.big.forms.Attribute;
 import at.ac.tuwien.big.forms.AttributePageElement;
 import at.ac.tuwien.big.forms.AttributeType;
+import at.ac.tuwien.big.forms.AttributePageElement;
+import at.ac.tuwien.big.forms.Column;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
 import at.ac.tuwien.big.forms.Form;
@@ -26,6 +29,7 @@ import at.ac.tuwien.big.forms.Page;
 import at.ac.tuwien.big.forms.Relationship;
 import at.ac.tuwien.big.forms.RelationshipPageElement;
 import at.ac.tuwien.big.forms.SelectionField;
+import at.ac.tuwien.big.forms.Table;
 
 /**
  * This class contains custom scoping description.
@@ -42,6 +46,102 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	}
 	// Wer macht was
 	//TODO: Tyler 1,3
+		
+	/*
+	 * FML Scoping
+	 */
+
+	/**
+	 * 1) An attribute page element has to reference an attribute of the entity the containing form 
+	 *    references.
+	 *    Example: The text-field PublicationTitleField is only allowed to handle the attributes of the entity 
+	 *    Publication (title, keywords, …, fields).
+	 *
+	 * @param scope
+	 * @param ref
+	 * @return IScope
+	 */
+	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
+		ArrayList<EObject> elements = new ArrayList<EObject>();
+		Page theContainingPage = null;
+		Form thePageForm = null;
+		
+		Entity theReferencedEntity = null; 
+
+		if(scope.eContainer() instanceof Page) {
+			theContainingPage = (Page)scope.eContainer();
+		}
+		
+		if(theContainingPage != null && theContainingPage.eContainer() instanceof Form) {
+			thePageForm = (Form)theContainingPage.eContainer();
+			theReferencedEntity = thePageForm.getEntity();
+
+			HashSet<Entity> alreadyUsedEntities = new HashSet<Entity>();
+
+			for (Entity current=theReferencedEntity; current!=null; current=current.getSuperType()) {
+				this.logger.debug("elements for "+theReferencedEntity.getName()+" are "+ elements);
+				if (alreadyUsedEntities.contains(current)) {
+					break;
+				}
+				alreadyUsedEntities.add(current);
+				elements.addAll(current.getFeatures());
+			}
+		}
+		
+		IScope retScope = IScope.NULLSCOPE;
+		if(elements != null) {
+			retScope = Scopes.scopeFor(elements); 
+		}
+		
+		return retScope;
+	}
+	
+	/**
+	 * A column of a table can only reference attributes of the entity of the form the table edits.
+	 *	Example: The column AuthorFirstNameColumn can only edit the attributes of the entity Person 
+	 *	(title, keywords, …, fields), because the table AuthorTable defined the PersonForm as editing form,
+	 *	which references the entity Person
+	 * 
+	 * @param scope
+	 * @param reference
+	 * @return
+	 */
+	IScope scope_AttributePageElement_attribute(Column scope, EReference reference)	{
+		EObject theRefEObj = null;
+		EList<Feature> elements = null;
+		Entity theReferencedEntity = null; 
+		Table theContainingTable = null;
+		
+		if((Table)scope.eContainer() instanceof Table) {
+			theContainingTable = (Table)scope.eContainer();
+//			this.logger.debug(theContainingTable);
+		}
+		
+		Relationship theRelationship = (Relationship)theContainingTable.getRelationship();
+//		this.logger.debug("theRelationship:"+theRelationship);
+		if(theRelationship instanceof Relationship) {
+
+			theRefEObj = theRelationship.getTarget();
+//			this.logger.debug("theRefEObj:" + theRefEObj);
+			
+			if(theRefEObj instanceof Entity) {
+				theReferencedEntity = (Entity)theRefEObj;
+//				this.logger.debug("theReferencedEntity:" + theReferencedEntity);
+			
+				theReferencedEntity = (Entity)theRefEObj;
+				elements = theReferencedEntity.getFeatures();
+//				this.logger.debug(elements);
+			}
+		}
+
+		IScope retScope = IScope.NULLSCOPE;
+		if(elements != null) {
+			retScope = Scopes.scopeFor(elements); 
+		}
+		
+		return retScope;
+	}
+	
 	//TODO: Clemente 2,5
 	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
 		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__EDITING_FORM)) {
