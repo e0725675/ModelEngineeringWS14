@@ -17,6 +17,7 @@ import at.ac.tuwien.big.forms.Attribute;
 import at.ac.tuwien.big.forms.AttributePageElement;
 import at.ac.tuwien.big.forms.AttributeValueCondition;
 import at.ac.tuwien.big.forms.Column;
+import at.ac.tuwien.big.forms.CompositeCondition;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
 import at.ac.tuwien.big.forms.Form;
@@ -65,6 +66,24 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 					return IScope.NULLSCOPE;
 				}
 				page = (Page)eo_page;
+			} else if (avc_container instanceof CompositeCondition){
+				EObject parentComp = avc_container.eContainer();
+				while(parentComp instanceof CompositeCondition) {
+					parentComp = parentComp.eContainer();
+				}
+				if (parentComp instanceof Page) {
+					page = (Page)parentComp;
+				} else if (parentComp instanceof PageElement) {
+					EObject shouldBePage = parentComp.eContainer();
+					if (!(shouldBePage instanceof Page)) {
+						logger.error("scope_AttributeValueCondition_attribute: Parent container page element of root composite condition is not a Page. "+shouldBePage);
+						return IScope.NULLSCOPE;
+					}
+					page = (Page)shouldBePage;
+				} else {
+					logger.error("scope_AttributeValueCondition_attribute: Parent container of root composite condition is neither a Page or a PageElement. "+parentComp);
+					return IScope.NULLSCOPE;
+				}
 			} else {
 				logger.error("scope_AttributeValueCondition_attribute: Parent container is neither a Page or a PageElement. "+avc_container);
 				return IScope.NULLSCOPE;
@@ -158,6 +177,7 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 * @return
 	 */
 	IScope scope_AttributePageElement_attribute(Column scope, EReference reference)	{
+		EObject theRefEObj = null;
 		EList<Feature> elements = null;
 		Entity theReferencedEntity = null; 
 		Table theContainingTable = null;
