@@ -1,0 +1,12 @@
+-- @path Forms=/at.ac.tuwien.big.forms.transformations/metamodel/forms.ecore
+
+module Entities2Forms;
+create OUT : Forms from IN : Forms;
+
+rule EntityModel2FormModel {
+	from
+		em : Forms!EntityModel
+	to 
+		fm : Forms!FormModel (
+		)
+}
