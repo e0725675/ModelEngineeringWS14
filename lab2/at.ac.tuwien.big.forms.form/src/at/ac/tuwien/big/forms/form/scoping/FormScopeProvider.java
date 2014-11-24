@@ -13,7 +13,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 
+import at.ac.tuwien.big.forms.Attribute;
 import at.ac.tuwien.big.forms.AttributePageElement;
+import at.ac.tuwien.big.forms.AttributeValueCondition;
 import at.ac.tuwien.big.forms.Column;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
@@ -22,6 +24,7 @@ import at.ac.tuwien.big.forms.FormModel;
 import at.ac.tuwien.big.forms.FormsPackage;
 import at.ac.tuwien.big.forms.List;
 import at.ac.tuwien.big.forms.Page;
+import at.ac.tuwien.big.forms.PageElement;
 import at.ac.tuwien.big.forms.Relationship;
 import at.ac.tuwien.big.forms.RelationshipPageElement;
 import at.ac.tuwien.big.forms.Table;
@@ -41,7 +44,60 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	}
 	// Wer macht was
 	//TODO: Tyler 1,3
-		
+	/*
+	 * An  attribute  value  condition  has  to  reference  an  attribute  of  the  entity  the  containing 
+	 * form references.
+	 * */
+	public IScope scope_AttributeValueCondition_attribute(AttributeValueCondition avc, EReference ref) {
+		logger.info("scope_AttributeValueCondition_attribute");
+		if (FormsPackage.Literals.ATTRIBUTE_VALUE_CONDITION__ATTRIBUTE.equals(ref)) {
+			ArrayList<EObject> elements = new ArrayList<EObject>();
+			EObject avc_container = avc.eContainer();
+			Page page = null;
+			if (avc_container instanceof Page) {
+				page = (Page)avc_container;
+				
+			} else if (avc_container instanceof PageElement) {
+				PageElement pageElement = (PageElement)avc_container;
+				EObject eo_page = pageElement.eContainer();
+				if (!(eo_page instanceof Page)) {
+					logger.error("scope_AttributeValueCondition_attribute: PageElement parent container is not a Page. "+eo_page);
+					return IScope.NULLSCOPE;
+				}
+				page = (Page)eo_page;
+			} else {
+				logger.error("scope_AttributeValueCondition_attribute: Parent container is neither a Page or a PageElement. "+avc_container);
+				return IScope.NULLSCOPE;
+			}
+			
+			EObject eo_form = page.eContainer();
+			if (!(eo_form instanceof Form)) {
+				logger.error("scope_AttributeValueCondition_attribute: Page parent container is not a Form. "+eo_form);
+				return IScope.NULLSCOPE;
+			}
+			
+			Form form = (Form)eo_form;
+			
+			Entity entity = form.getEntity();
+			HashSet<Entity> alreadyUsedEntities = new HashSet<Entity>();
+			for (Entity current=entity; current!=null; current=current.getSuperType()) {
+				if (alreadyUsedEntities.contains(current)) {
+					break;
+				}
+				alreadyUsedEntities.add(current);
+				for (Feature f : current.getFeatures()) {
+					if (f instanceof Attribute) {
+						elements.add(f);
+					}
+				}
+			}
+			logger.info("Adding:");
+			for (EObject o : elements) logger.info(o.toString());
+			return Scopes.scopeFor(elements);
+		} else {
+			return IScope.NULLSCOPE;
+		}
+	}
 	/*
 	 * FML Scoping
 	 */
@@ -57,6 +113,8 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 * @return IScope
 	 */
 	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
+
+		logger.info("scope_AttributePageElement_attribute AttributePageElement");
 		EList<Feature> elements = null;
 		
 		Page theContainingPage = null;
@@ -92,6 +150,7 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 * @return
 	 */
 	IScope scope_AttributePageElement_attribute(Column scope, EReference reference)	{
+		logger.info("scope_AttributePageElement_attribute Column");
 		EObject theRefEObj = this.extractEntityFromEObjectTree(scope, 0);
 		EList<Feature> elements = null;
 		Entity theReferencedEntity = null; 
