@@ -43,12 +43,12 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		//log.info("getScope: context: "+context+" reference: "+reference);
 		return super.getScope(context, reference);
 	}
-	// Wer macht was
-	//TODO: Tyler 1,3
+
 	/*
-	 * An  attribute  value  condition  has  to  reference  an  attribute  of  the  entity  the  containing 
-	 * form references.
-	 * */
+	 * FML Condition 3
+	 * An  attribute  value  condition  has  to  reference  an  attribute  of  the  entity  the  containing
+	 * form references 
+	 */
 	public IScope scope_AttributeValueCondition_attribute(AttributeValueCondition avc, EReference ref) {
 		logger.info("scope_AttributeValueCondition_attribute");
 		if (FormsPackage.Literals.ATTRIBUTE_VALUE_CONDITION__ATTRIBUTE.equals(ref)) {
@@ -117,16 +117,16 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			return IScope.NULLSCOPE;
 		}
 	}
-	/*
-	 * FML Scoping
-	 */
 
+	/*
+	 * FML Condition 1
+	 *  An attribute page element has to reference an attribute of the entity the containing form 
+	 *   references.
+	 *   Example: The text-field PublicationTitleField is only allowed to handle the attributes of the entity 
+	 *   Publication (title, keywords, …, fields).
+	 */
+	
 	/**
-	 * 1) An attribute page element has to reference an attribute of the entity the containing form 
-	 *    references.
-	 *    Example: The text-field PublicationTitleField is only allowed to handle the attributes of the entity 
-	 *    Publication (title, keywords, …, fields).
-	 *
 	 * @param scope
 	 * @param ref
 	 * @return IScope
@@ -166,12 +166,14 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		return retScope;
 	}
 	
+	 /*
+	  * FML Condition 6
+	  * A column of a table can only reference attributes of the entity of the form the table edits.
+	  *	Example: The column AuthorFirstNameColumn can only edit the attributes of the entity Person 
+	  *	(title, keywords, …, fields), because the table AuthorTable defined the PersonForm as editing form,
+	  *	which references the entity Person
+	  */ 
 	/**
-	 * A column of a table can only reference attributes of the entity of the form the table edits.
-	 *	Example: The column AuthorFirstNameColumn can only edit the attributes of the entity Person 
-	 *	(title, keywords, …, fields), because the table AuthorTable defined the PersonForm as editing form,
-	 *	which references the entity Person
-	 * 
 	 * @param scope
 	 * @param reference
 	 * @return
@@ -212,7 +214,11 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		return retScope;
 	}
 	
-	//TODO: Clemente 2,5
+
+	/*
+	 * FML condition 5
+	 * A relationship page element has to reference a form of the same form model as editing form. 
+	 */
 	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
 		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__EDITING_FORM)) {
 			ArrayList<EObject> elements = new ArrayList<EObject>();
@@ -251,6 +257,11 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		}
 	}
 	
+	/*
+	 * FML Condition 2
+	 * A relationship page element has to reference a relationship of the entity the containing 
+	 * form references.
+	 */
 	IScope scope_RelationshipPageElement_relationship(RelationshipPageElement rpe, EReference ref) {
 		//logger.info("scope_RelationshipPageElement_relationship: "+rpe.getElementID());
 		if (ref.equals(FormsPackage.Literals.RELATIONSHIP_PAGE_ELEMENT__RELATIONSHIP)) {
@@ -285,14 +296,14 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			return IScope.NULLSCOPE;
 		}
 	}
-	//TODO: Lukas 4,6
 	
-	/* 4 - A selection field is only allowed to reference an attribute of type Boolean or an attribute 
-	which has a reference to an enumeration.
-	Example: The selection-field ExternalPersonSelection in page "Person Details" is only allowed to 
-	reference the attributes external and faculty of the entity Person
-	*/
-	
+	/*
+	 * FML Condition 4
+	 * A selection field is only allowed to reference an attribute of type Boolean or an attribute 
+	 * which has a reference to an enumeration.
+	 * Example: The selection-field ExternalPersonSelection in page "Person Details" is only allowed to 
+	 * reference the attributes external and faculty of the entity Person
+	 */
 	IScope scope_AttributePageElement_attribute(SelectionField sf, EReference ref){
 		if (ref.equals(FormsPackage.Literals.ATTRIBUTE_PAGE_ELEMENT__ATTRIBUTE)){
 			ArrayList<EObject> elements = new ArrayList<EObject>();
@@ -323,6 +334,4 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			return IScope.NULLSCOPE;
 		}
 	}
-	
-	
 }
