@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 
+import at.ac.tuwien.big.forms.Attribute;
+import at.ac.tuwien.big.forms.AttributePageElement;
+import at.ac.tuwien.big.forms.AttributeType;
 import at.ac.tuwien.big.forms.Entity;
 import at.ac.tuwien.big.forms.Feature;
 import at.ac.tuwien.big.forms.Form;
@@ -21,6 +25,7 @@ import at.ac.tuwien.big.forms.List;
 import at.ac.tuwien.big.forms.Page;
 import at.ac.tuwien.big.forms.Relationship;
 import at.ac.tuwien.big.forms.RelationshipPageElement;
+import at.ac.tuwien.big.forms.SelectionField;
 
 /**
  * This class contains custom scoping description.
@@ -110,6 +115,44 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			return IScope.NULLSCOPE;
 		}
 	}
-	
 	//TODO: Lukas 4,6
+	
+	/* 4 - A selection field is only allowed to reference an attribute of type Boolean or an attribute 
+	which has a reference to an enumeration.
+	Example: The selection-field ExternalPersonSelection in page "Person Details" is only allowed to 
+	reference the attributes external and faculty of the entity Person
+	*/
+	
+	IScope scope_AttributePageElement_attribute(SelectionField sf, EReference ref){
+		if (ref.equals(FormsPackage.Literals.ATTRIBUTE_PAGE_ELEMENT__ATTRIBUTE)){
+			ArrayList<EObject> elements = new ArrayList<EObject>();
+			EObject eo_page = sf.eContainer();
+			if (eo_page instanceof Page) {
+				//logger.info("eo_page is a Page: "+eo_page);
+				Page page = (Page)eo_page;
+				EObject eo_form = page.eContainer();
+				if (eo_form instanceof Form) {
+					Form form = (Form) eo_form;
+					for (Feature feature :form.getEntity().getFeatures()) {
+						if (feature instanceof  Attribute ) {
+							Attribute attribute = (Attribute) feature;
+							if (attribute.getType().equals(AttributeType.BOOLEAN)) {
+								elements.add(attribute);
+							} else if (attribute.getType().equals(AttributeType.NONE) && 
+									   !(attribute.getEnumeration().equals(null))){
+								elements.add(attribute);
+							}
+						}
+						}
+					}				
+				}	
+			
+			return Scopes.scopeFor(elements);
+		} else {
+			logger.info("scope_AttributePageElement_attribute NULLSCOPE");
+			return IScope.NULLSCOPE;
+		}
+	}
+	
+	
 }
