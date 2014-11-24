@@ -61,7 +61,10 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		
 		Page theContainingPage = null;
 		Form thePageForm = null;
+		
 		Entity theReferencedEntity = null; 
+		// TODO use private method to extract entity here.
+
 		if(scope.eContainer() instanceof Page) {
 			theContainingPage = (Page)scope.eContainer();
 		}
@@ -70,9 +73,7 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			thePageForm = (Form)theContainingPage.eContainer();
 			if(thePageForm != null && thePageForm.getEntity() instanceof Entity) {
 				theReferencedEntity =  thePageForm.getEntity();
-//					elements.add(theReferencedEntity);
 				elements = theReferencedEntity.getFeatures();
-//					this.logger.debug(elements);
 			}
 		}
 		
@@ -83,17 +84,55 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		
 		return retScope;
 	}
+	
+	/**
+	 * 
+	 * @param scope
+	 * @param reference
+	 * @return
+	 */
+	IScope scope_AttributePageElement_attribute(Column scope, EReference reference)	{
+		EObject theRefEObj = this.extractEntityFromEObjectTree(scope, 0);
+		EList<Feature> elements = null;
+		Entity theReferencedEntity = null; 
 
-	IScope scope_Column_attribute(Column scope, EReference ref) {
-		this.logger.debug("found column" + scope.toString());
+//		this.logger.debug(theRefEObj);
+		
+		if(theRefEObj instanceof Entity) {
+			theReferencedEntity =  (Entity)theRefEObj;
+			elements = theReferencedEntity.getFeatures();
+			this.logger.debug(elements);
+		}
+
 		IScope retScope = IScope.NULLSCOPE;
-//		if(elements != null) {
-//			retScope = Scopes.scopeFor(elements); 
-//		}
+		if(elements != null) {
+			retScope = Scopes.scopeFor(elements); 
+		}
 		
 		return retScope;
 	}
 
+	/**
+	 * Traverse a hierarchy of EObjects (until level) and return the Form. 
+	 * 
+	 * @param obj
+	 * @param level
+	 * @return Form|null
+	 */
+	private EObject extractEntityFromEObjectTree(EObject obj, int level) {
+		if(level == 100) {
+			this.logger.error("Uh-oh, seem to have looped too many (100) times up the EObject hierarchy");
+			return null;
+		}
+		EObject ret = null;
+		if(obj instanceof Form) {
+			ret = ((Form)obj).getEntity();
+		} else {
+			ret = this.extractEntityFromEObjectTree(obj.eContainer(), ++level);
+		}
+		
+		return ret;
+	}
 	
 	//TODO: Clemente 2,5
 	IScope scope_RelationshipPageElement_editingForm(RelationshipPageElement rpe, EReference ref) {
