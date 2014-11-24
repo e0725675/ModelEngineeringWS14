@@ -58,12 +58,10 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	 */
 	IScope scope_AttributePageElement_attribute(AttributePageElement scope, EReference ref) {
 		EList<Feature> elements = null;
-		
 		Page theContainingPage = null;
 		Form thePageForm = null;
 		
 		Entity theReferencedEntity = null; 
-		// TODO use private method to extract entity here.
 
 		if(scope.eContainer() instanceof Page) {
 			theContainingPage = (Page)scope.eContainer();
@@ -86,13 +84,17 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 	}
 	
 	/**
+	 * A column of a table can only reference attributes of the entity of the form the table edits.
+	 *	Example: The column AuthorFirstNameColumn can only edit the attributes of the entity Person 
+	 *	(title, keywords, …, fields), because the table AuthorTable defined the PersonForm as editing form,
+	 *	which references the entity Person
 	 * 
 	 * @param scope
 	 * @param reference
 	 * @return
 	 */
 	IScope scope_AttributePageElement_attribute(Column scope, EReference reference)	{
-		EObject theRefEObj = this.extractEntityFromEObjectTree(scope, 0);
+		EObject theRefEObj = null;
 		EList<Feature> elements = null;
 		Entity theReferencedEntity = null; 
 		Table theContainingTable = null;
@@ -111,7 +113,7 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 			
 			if(theRefEObj instanceof Entity) {
 				theReferencedEntity = (Entity)theRefEObj;
-				this.logger.debug("theReferencedEntity:" + theReferencedEntity);
+//				this.logger.debug("theReferencedEntity:" + theReferencedEntity);
 			
 				theReferencedEntity = (Entity)theRefEObj;
 				elements = theReferencedEntity.getFeatures();
@@ -125,28 +127,6 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		}
 		
 		return retScope;
-	}
-
-	/**
-	 * Traverse a hierarchy of EObjects (until level) and return the Form. 
-	 * 
-	 * @param obj
-	 * @param level
-	 * @return Form|null
-	 */
-	private EObject extractEntityFromEObjectTree(EObject obj, int level) {
-		if(level == 100) {
-			this.logger.error("Uh-oh, seem to have looped too many (100) times up the EObject hierarchy");
-			return null;
-		}
-		EObject ret = null;
-		if(obj instanceof Form) {
-			ret = ((Form)obj).getEntity();
-		} else {
-			ret = this.extractEntityFromEObjectTree(obj.eContainer(), ++level);
-		}
-		
-		return ret;
 	}
 	
 	//TODO: Clemente 2,5
