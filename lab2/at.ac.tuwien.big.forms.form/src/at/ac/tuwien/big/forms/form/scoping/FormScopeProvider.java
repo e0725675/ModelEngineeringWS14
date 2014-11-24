@@ -95,13 +95,28 @@ public class FormScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDe
 		EObject theRefEObj = this.extractEntityFromEObjectTree(scope, 0);
 		EList<Feature> elements = null;
 		Entity theReferencedEntity = null; 
-
-//		this.logger.debug(theRefEObj);
+		Table theContainingTable = null;
 		
-		if(theRefEObj instanceof Entity) {
-			theReferencedEntity =  (Entity)theRefEObj;
-			elements = theReferencedEntity.getFeatures();
-			this.logger.debug(elements);
+		if((Table)scope.eContainer() instanceof Table) {
+			theContainingTable = (Table)scope.eContainer();
+//			this.logger.debug(theContainingTable);
+		}
+		
+		Relationship theRelationship = (Relationship)theContainingTable.getRelationship();
+//		this.logger.debug("theRelationship:"+theRelationship);
+		if(theRelationship instanceof Relationship) {
+
+			theRefEObj = theRelationship.getTarget();
+//			this.logger.debug("theRefEObj:" + theRefEObj);
+			
+			if(theRefEObj instanceof Entity) {
+				theReferencedEntity = (Entity)theRefEObj;
+				this.logger.debug("theReferencedEntity:" + theReferencedEntity);
+			
+				theReferencedEntity = (Entity)theRefEObj;
+				elements = theReferencedEntity.getFeatures();
+//				this.logger.debug(elements);
+			}
 		}
 
 		IScope retScope = IScope.NULLSCOPE;
