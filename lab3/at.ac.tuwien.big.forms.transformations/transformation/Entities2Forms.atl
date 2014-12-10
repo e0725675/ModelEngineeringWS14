@@ -10,3 +10,26 @@ rule EntityModel2FormModel {
 		fm : Forms!FormModel (
 		)
 }
+
+rule Entity2Form {
+	from
+		em : Forms!Entity
+	to 
+		fm : Forms!Form (
+			-- Ex: [form element] <- em.[form element]
+			title <- em.name
+		)
+	
+}
+
+rule newForm( title: String, description: String, welcomeForm: Boolean ) {
+	
+--		property entity : Entity;
+--		attribute title : String;
+--		attribute description : String[?];
+--		property pages : Page[*] { ordered composes };
+--		attribute welcomeForm : Boolean;
+	
+	
+}
+

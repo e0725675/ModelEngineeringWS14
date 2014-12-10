@@ -15,6 +15,7 @@ lab2/at.ac.tuwien.big.forms.entity/src/*
 ## lab 3 ignores
 lab3/ATL_Demo_WS_2014/
 lab3/at.ac.tuwien.big.forms.transformations/transformation/Entities2Forms.asm
+lab3/at.ac.tuwien.big.forms.transformations/model/output.xmi
 
 ## general ignores
 **plugin.xml
