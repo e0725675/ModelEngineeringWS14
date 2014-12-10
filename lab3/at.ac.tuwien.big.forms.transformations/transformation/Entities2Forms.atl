@@ -8,6 +8,7 @@ rule EntityModel2FormModel {
 		em : Forms!EntityModel
 	to 
 		fm : Forms!FormModel (
+			forms <- em.entityModelElements
 		)
 }
 
@@ -17,19 +18,25 @@ rule Entity2Form {
 	to 
 		fm : Forms!Form (
 			-- Ex: [form element] <- em.[form element]
-			title <- em.name
+			name <- em.name,
+			title <- em.name,
+			pages <- thisModule.NewPage(em)
 		)
-	
+	do {
+		
+	}
 }
 
-rule newForm( title: String, description: String, welcomeForm: Boolean ) {
-	
---		property entity : Entity;
---		attribute title : String;
---		attribute description : String[?];
---		property pages : Page[*] { ordered composes };
---		attribute welcomeForm : Boolean;
-	
-	
+-- rule w/o parameters
+lazy rule NewPage {
+	from 
+		em : Forms!Entity
+	to
+		p : Forms!Page (
+			title <- (em.name + ' Details')
+		)
+	do {
+		p;
+	}
 }
 
