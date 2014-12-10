@@ -12,6 +12,10 @@ lab2/at.ac.tuwien.big.forms.entity.ui/src/*
 lab2/at.ac.tuwien.big.forms.entity/.antlr-generator-3.2.0-patch.jar
 lab2/at.ac.tuwien.big.forms.entity/src/*
 
+## lab 3 ignores
+lab3/ATL_Demo_WS_2014/
+lab3/at.ac.tuwien.big.forms.transformations/transformation/Entities2Forms.asm
+
 ## general ignores
 **plugin.xml
 **plugin.xml_gen
