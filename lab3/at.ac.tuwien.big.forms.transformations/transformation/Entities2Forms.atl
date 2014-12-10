@@ -8,7 +8,7 @@ rule EntityModel2FormModel {
 		em : Forms!EntityModel
 	to 
 		fm : Forms!FormModel (
-			forms <- em.entityModelElements
+			forms <- em.entityModelElements -> select(e1 | e1.oclIsTypeOf(Forms!Entity))
 		)
 }
 
@@ -22,25 +22,34 @@ rule Entity2Form {
 			title <- em.name,
 			-- pages should include per default the Form's associate entities 
 			-- AND should include any Entities LINKED as a relationship
-			pages <- thisModule.NewPage(em)
---			pages <- thisModule.newPage(
---				em.features -> select(e | e.oclIsTypeOf(Forms!Relationship)).target
---			)
+			pages <- thisModule.PageFromEntity(em)
+--			pages <- thisModule.PageFromEntity(em.features -> 
+--				select(e1 | e1.oclIsTypeOf(Forms!Relationship))
+--				.any())
 		)
 	do {
 	}
 }
 
+lazy rule PageFromRelationship {
+	from 
+		rel : Forms!Relationship
+	to
+		p : Forms!Page (
+			p <- thisModule.PageFromEntity(rel.target)
+		)
+	
+}
+
 -- rule w/o parameters
-lazy rule NewPage {
+lazy rule PageFromEntity {
 	from 
 		em : Forms!Entity
 	to
 		p : Forms!Page (
 			title <- (em.name + ' Details')
 		)
-	do {
-		p;
-	}
+--	do {
+--		p;
+--	}
 }
-
