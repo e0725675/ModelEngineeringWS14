@@ -20,10 +20,14 @@ rule Entity2Form {
 			-- Ex: [form element] <- em.[form element]
 			name <- em.name,
 			title <- em.name,
+			-- pages should include per default the Form's associate entities 
+			-- AND should include any Entities LINKED as a relationship
 			pages <- thisModule.NewPage(em)
+--			pages <- thisModule.newPage(
+--				em.features -> select(e | e.oclIsTypeOf(Forms!Relationship)).target
+--			)
 		)
 	do {
-		
 	}
 }
 
