@@ -22,24 +22,25 @@ rule Entity2Form {
 			title <- em.name,
 			-- pages should include per default the Form's associate entities 
 			-- AND should include any Entities LINKED as a relationship
-			pages <- thisModule.PageFromEntity(em)
---			pages <- thisModule.PageFromEntity(em.features -> 
---				select(e1 | e1.oclIsTypeOf(Forms!Relationship))
---				.any())
+			pages <- thisModule.PageFromEntity(em),
+			pages <- (em.features -> 
+				select(e1 | e1.oclIsTypeOf(Forms!Relationship)))->collect(f | thisModule.PageFromRelationship(f))
+			--pages <- (em.features -> 
+			--	select(e1 | e1.oclIsTypeOf(Forms!Entity)))->collect(e | thisModule.PageFromEntity(e))
 		)
 	do {
 	}
 }
 
-lazy rule PageFromRelationship {
-	from 
-		rel : Forms!Relationship
-	to
-		p : Forms!Page (
-			p <- thisModule.PageFromEntity(rel.target)
-		)
-	
-}
+--lazy rule PageFromRelationship {
+--	from 
+--		rel : Forms!Relationship
+--	to
+--		p : Forms!Page (
+--			p <- thisModule.PageFromEntity(rel.target)
+--		)
+--	
+--}
 
 -- rule w/o parameters
 lazy rule PageFromEntity {
@@ -48,6 +49,18 @@ lazy rule PageFromEntity {
 	to
 		p : Forms!Page (
 			title <- (em.name + ' Details')
+		)
+--	do {
+--		p;
+--	}
+}
+
+lazy rule PageFromRelationship {
+	from 
+		rm : Forms!Relationship
+	to
+		p : Forms!Page (
+			title <- (rm.name + ' RDetails')
 		)
 --	do {
 --		p;
