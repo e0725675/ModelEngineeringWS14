@@ -3,6 +3,9 @@
 module Entities2Forms;
 create OUT : Forms from IN : Forms;
 
+helper def: id : Integer = 0;
+helper context Integer def : inc() : Integer = self + 1;
+
 rule EntityModel2FormModel {
 	from
 		em : Forms!EntityModel
@@ -25,8 +28,6 @@ rule Entity2Form {
 			pages <- thisModule.PageFromEntity(em),
 			pages <- (em.features -> 
 				select(e1 | e1.oclIsTypeOf(Forms!Relationship)))->collect(f | thisModule.PageFromRelationship(f))
-			--pages <- (em.features -> 
-			--	select(e1 | e1.oclIsTypeOf(Forms!Entity)))->collect(e | thisModule.PageFromEntity(e))
 		)
 	do {
 		fm.entity <- em;
@@ -43,6 +44,8 @@ rule Entity2Form {
 --	
 --}
 
+
+
 -- rule w/o parameters
 lazy rule PageFromEntity {
 	from 
@@ -51,9 +54,22 @@ lazy rule PageFromEntity {
 		p : Forms!Page (
 			title <- (em.name + ' Details')
 		)
---	do {
---		p;
---	}
+	do {
+		p.pageElements <- (em.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))->collect(p2 | thisModule.TextFieldFromAttribute(p2)));
+	}
+}
+
+lazy rule TextFieldFromAttribute {
+	from
+		attr : Forms!Attribute
+	to
+		tf : Forms!TextField (
+			label <- attr.name
+		)
+	do {
+		tf.attribute <- attr;
+		tf.elementID <- thisModule.id.inc().toString();
+	}
 }
 
 lazy rule PageFromRelationship {
