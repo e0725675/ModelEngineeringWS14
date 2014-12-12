@@ -29,6 +29,7 @@ rule Entity2Form {
 			--	select(e1 | e1.oclIsTypeOf(Forms!Entity)))->collect(e | thisModule.PageFromEntity(e))
 		)
 	do {
+		fm.entity <- em;
 	}
 }
 
