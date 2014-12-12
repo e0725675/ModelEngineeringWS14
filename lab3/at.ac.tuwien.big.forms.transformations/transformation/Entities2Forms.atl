@@ -61,7 +61,7 @@ lazy rule PageFromRelationship {
 		rm : Forms!Relationship
 	to
 		p : Forms!Page (
-			title <- (rm.name + ' RDetails')
+			title <- (rm.target.name + ' RDetails')
 		)
 --	do {
 --		p;
