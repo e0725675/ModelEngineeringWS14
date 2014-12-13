@@ -6,91 +6,231 @@ create OUT : Forms from IN : Forms;
 helper def: id : Integer = 0;
 helper context Integer def : inc() : Integer = self + 1;
 
+-- determines whether the input Entity would be used in a welcome form
+helper def: isWelcomeForm(e : Forms!Entity) : Boolean = 
+	let allReferencedEntities : Sequence(Forms!Entity) = 
+		Forms!Relationship.allInstances()->select(r | r.target = e)->collect(r2 | r2.target)
+	in 
+	if (not allReferencedEntities.includes(e)) then 
+		if (thisModule.outModelHasWelcomeForm()) then 
+			false
+		 else 
+			true
+		endif
+	 else 
+		false
+	endif
+;
+
+helper def: getFormForEntity(e : Forms!Entity) : Forms!Form = 
+		Forms!Form.allInstancesFrom('OUT')->any(f | f.entity=e)
+	;
+-- returns true if output FormModel already has a welcome form
+helper def: outModelHasWelcomeForm() : Boolean = 
+	Forms!Form.allInstancesFrom('OUT')->select(f | f.welcomeForm=true)->size()<>0;
+
+-- makes the first letter of the string upper case
+helper def: capitalize(s : String) : String =
+	let first : String = s.substring(1, 1).toUpper()
+	in first + s.substring(2,s.size());
+
+-- transform the root element
 rule EntityModel2FormModel {
 	from
 		em : Forms!EntityModel
 	to 
 		fm : Forms!FormModel (
-			forms <- em.entityModelElements -> select(e1 | e1.oclIsTypeOf(Forms!Entity))
+			forms <- em.entityModelElements -> select(e1 | e1.oclIsTypeOf(Forms!Entity))->collect(e2 | thisModule.Entity2Form(e2))
 		)
 }
 
-rule Entity2Form {
+lazy rule Entity2Form {
 	from
 		em : Forms!Entity
 	to 
 		fm : Forms!Form (
-			-- Ex: [form element] <- em.[form element]
 			name <- em.name,
 			title <- em.name,
-			-- pages should include per default the Form's associate entities 
-			-- AND should include any Entities LINKED as a relationship
-			pages <- thisModule.PageFromEntity(em),
-			pages <- (em.features -> 
-				select(e1 | e1.oclIsTypeOf(Forms!Relationship)))->collect(f | thisModule.PageFromRelationship(f))
+			welcomeForm <- thisModule.isWelcomeForm(em),
+			pages <- thisModule.EntityToPage(em),
+			pages <- em.features->select(f | f.oclIsTypeOf(Forms!Relationship))->collect(r | thisModule.RelationshipToPage(r))
 		)
 	do {
 		fm.entity <- em;
 	}
 }
 
---lazy rule PageFromRelationship {
---	from 
---		rel : Forms!Relationship
---	to
---		p : Forms!Page (
---			p <- thisModule.PageFromEntity(rel.target)
---		)
---	
---}
-
--- Page mit List
-
-
--- rule w/o parameters
-lazy rule PageFromEntity {
+lazy rule EntityToPage {
 	from 
-		em : Forms!Entity
+		ne : Forms!Entity
 	to
 		p : Forms!Page (
-			title <- (em.name + ' Details')
+			title <- thisModule.capitalize(ne.name),
+			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
 		)
 	do {
-		p.pageElements <- (em.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))->collect(p2 | thisModule.TextFieldFromAttribute(p2)));
+		
+	}
+}
+lazy rule RelationshipToPage{
+	from 
+		ne : Forms!Relationship
+	to
+		p : Forms!Page (
+			title <- thisModule.capitalize(ne.name),
+			pageElements <- ne
+		)
+}
+
+abstract rule FeatureToPageElement {
+	from
+		f : Forms!Feature
+	to
+		pe : Forms!PageElement
+}
+abstract rule RelationshipToRelationshipPageElement extends FeatureToPageElement{
+	from
+		f : Forms!Relationship
+	to
+		
+		pe : Forms!RelationshipPageElement (
+			label <- thisModule.capitalize(f.target.name),
+			editingForm <-thisModule.getFormForEntity(f.target)
+		)
+}
+rule RelationshipToList extends RelationshipToRelationshipPageElement{
+	from
+		f : Forms!Relationship
+	to
+		pe : Forms!List
+	do {
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.toString();
+		
+		pe.relationship <- f;
 	}
 }
 
-lazy rule TextFieldFromAttribute {
+rule AttributeToTextFieldString extends FeatureToPageElement {
 	from
-		attr : Forms!Attribute
+		f : Forms!Attribute(f.type=#"String")
 	to
-		tf : Forms!TextField (
-			label <- attr.name
+		pe : Forms!TextField(
+			label <- thisModule.capitalize(f.name)
 		)
 	do {
-		tf.attribute <- attr;
-		tf.elementID <- thisModule.id.inc().toString();
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+	}
+}
+rule AttributeToTextFieldInteger extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#"Integer")
+	to
+		pe : Forms!TextField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+		pe.format='^[0-9]+$';
+	}
+}
+rule AttributeToTextFieldEmail extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#"Email")
+	to
+		pe : Forms!TextField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+		pe.format='^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$';
+	}
+}
+rule AttributeToTextFieldBoolean extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#"Boolean")
+	to
+		pe : Forms!TextField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+	}
+}
+rule AttributeToTextFieldYear extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#"Year")
+	to
+		pe : Forms!TextField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+		pe.format='^[0-9]+$';
+	}
+}
+rule AttributeToTextArea extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#Text)
+	to
+		pe : Forms!TextArea(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
 	}
 }
 
-lazy rule PageFromRelationship {
-	from 
-		rm : Forms!Relationship
-	to
-		p : Forms!Page (
-			title <- (rm.name + ' RDetails'),
-			pageElements <- thisModule.ListFromRelationship(rm)
-		)
-}
-
-lazy rule ListFromRelationship {
+rule AttributeToSelectionField extends FeatureToPageElement {
 	from
-		rm : Forms!Relationship
+		f : Forms!Attribute(f.type=#None)
 	to
-		l : Forms!List(
-			label <- rm.target.name
+		pe : Forms!SelectionField(
+			label <- thisModule.capitalize(f.name)
 		)
 	do {
-		l.elementID <- thisModule.id.inc().toString();
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+	}
+}
+
+rule AttributeToDateSelectionField extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#Date)
+	to
+		pe : Forms!DateSelectionField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
+	}
+}
+
+rule AttributeToTimeSelectionField extends FeatureToPageElement {
+	from
+		f : Forms!Attribute(f.type=#Time)
+	to
+		pe : Forms!TimeSelectionField(
+			label <- thisModule.capitalize(f.name)
+		)
+	do {
+		pe.attribute <- f;
+		thisModule.id <- thisModule.id.inc();
+		pe.elementID <- thisModule.id.inc().toString();
 	}
 }
