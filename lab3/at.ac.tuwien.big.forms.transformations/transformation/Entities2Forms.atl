@@ -135,7 +135,7 @@ rule AttributeToTextFieldString {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
 rule AttributeToTextFieldInteger {--extends FeatureToPageElement {
@@ -148,7 +148,7 @@ rule AttributeToTextFieldInteger {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 		pe.format='^[0-9]+$';
 	}
 }
@@ -162,7 +162,7 @@ rule AttributeToTextFieldEmail {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 		-- pe.format='^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$';
 	}
 }
@@ -176,7 +176,7 @@ rule AttributeToTextFieldBoolean {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
 rule AttributeToTextFieldYear {--extends FeatureToPageElement {
@@ -189,7 +189,7 @@ rule AttributeToTextFieldYear {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 		pe.format='^[0-9]+$';
 	}
 }
@@ -203,7 +203,7 @@ rule AttributeToTextArea {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
 
@@ -217,7 +217,7 @@ rule AttributeToSelectionField {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
 
@@ -231,7 +231,7 @@ rule AttributeToDateSelectionField {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
 
@@ -245,6 +245,6 @@ rule AttributeToTimeSelectionField {--extends FeatureToPageElement {
 	do {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
-		pe.elementID <- thisModule.id.inc().toString();
+		pe.elementID <- thisModule.id.toString();
 	}
 }
