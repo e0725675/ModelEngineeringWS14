@@ -79,11 +79,14 @@ lazy rule EntityToPage {
 	to
 		p : Forms!Page (
 			title <- thisModule.capitalize(ne.name) + ' Details',
-			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
+			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute)),
+			pageElements <- if (ne.superType.oclIsUndefined() = false)
+				then 
+					ne.superType.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
+				else
+					OclUndefined
+				endif
 		)
-	do {
---		p.pageElements <- thisModule.recurseEntity(ne) -> collect(f1 | FeatureToPageElement(f1));
-	}
 }
 
 lazy rule RelationshipToPage{
