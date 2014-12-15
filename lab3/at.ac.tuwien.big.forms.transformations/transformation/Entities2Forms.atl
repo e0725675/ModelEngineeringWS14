@@ -10,11 +10,11 @@ helper context Integer def : inc() : Integer = self + 1;
 helper def: recurseEntity(e : Forms!Entity) : Collection(Forms!Attribute) =
 	let features : Collection(Forms!Attribute) = Collection(Forms!Attribute)		
 	in
-	if (e.superType.oclIsUndefined() = false) then
-		-- e.superType.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
+	if (e.superType.oclIsUndefined()) then
 		e.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
 	else
-		e.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
+		thisModule->recurseEntity(e.superType)
+		->union(e.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute)))
 	endif
 	
 ;
@@ -79,13 +79,14 @@ lazy rule EntityToPage {
 	to
 		p : Forms!Page (
 			title <- thisModule.capitalize(ne.name) + ' Details',
-			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute)),
-			pageElements <- if (ne.superType.oclIsUndefined() = false)
-				then 
-					ne.superType.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
-				else
-					OclUndefined
-				endif
+			pageElements <- thisModule.recurseEntity(ne)
+--			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute)),
+--			pageElements <- if (ne.superType.oclIsTypeOf(Forms!Entity))
+--				then 
+--					ne.superType.features-> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
+--				else
+--					OclUndefined
+--				endif
 		)
 }
 
@@ -99,14 +100,8 @@ lazy rule RelationshipToPage{
 		)
 }
 
-abstract rule FeatureToPageElement {
-	from
-		f : Forms!Feature
-	to
-		pe : Forms!PageElement
-}
 
-abstract rule RelationshipToRelationshipPageElement extends FeatureToPageElement{
+abstract rule RelationshipToRelationshipPageElement {--extends FeatureToPageElement{
 	from
 		f : Forms!Relationship
 	to
@@ -130,7 +125,7 @@ rule RelationshipToList extends RelationshipToRelationshipPageElement{
 	}
 }
 
-rule AttributeToTextFieldString extends FeatureToPageElement {
+rule AttributeToTextFieldString {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#"String")
 	to
@@ -143,7 +138,7 @@ rule AttributeToTextFieldString extends FeatureToPageElement {
 		pe.elementID <- thisModule.id.inc().toString();
 	}
 }
-rule AttributeToTextFieldInteger extends FeatureToPageElement {
+rule AttributeToTextFieldInteger {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#"Integer")
 	to
@@ -157,7 +152,7 @@ rule AttributeToTextFieldInteger extends FeatureToPageElement {
 		pe.format='^[0-9]+$';
 	}
 }
-rule AttributeToTextFieldEmail extends FeatureToPageElement {
+rule AttributeToTextFieldEmail {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#"Email")
 	to
@@ -171,7 +166,7 @@ rule AttributeToTextFieldEmail extends FeatureToPageElement {
 		-- pe.format='^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$';
 	}
 }
-rule AttributeToTextFieldBoolean extends FeatureToPageElement {
+rule AttributeToTextFieldBoolean {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#"Boolean")
 	to
@@ -184,7 +179,7 @@ rule AttributeToTextFieldBoolean extends FeatureToPageElement {
 		pe.elementID <- thisModule.id.inc().toString();
 	}
 }
-rule AttributeToTextFieldYear extends FeatureToPageElement {
+rule AttributeToTextFieldYear {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#"Year")
 	to
@@ -198,7 +193,7 @@ rule AttributeToTextFieldYear extends FeatureToPageElement {
 		pe.format='^[0-9]+$';
 	}
 }
-rule AttributeToTextArea extends FeatureToPageElement {
+rule AttributeToTextArea {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#Text)
 	to
@@ -212,7 +207,7 @@ rule AttributeToTextArea extends FeatureToPageElement {
 	}
 }
 
-rule AttributeToSelectionField extends FeatureToPageElement {
+rule AttributeToSelectionField {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#None)
 	to
@@ -226,7 +221,7 @@ rule AttributeToSelectionField extends FeatureToPageElement {
 	}
 }
 
-rule AttributeToDateSelectionField extends FeatureToPageElement {
+rule AttributeToDateSelectionField {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#Date)
 	to
@@ -240,7 +235,7 @@ rule AttributeToDateSelectionField extends FeatureToPageElement {
 	}
 }
 
-rule AttributeToTimeSelectionField extends FeatureToPageElement {
+rule AttributeToTimeSelectionField {--extends FeatureToPageElement {
 	from
 		f : Forms!Attribute(f.type=#Time)
 	to
