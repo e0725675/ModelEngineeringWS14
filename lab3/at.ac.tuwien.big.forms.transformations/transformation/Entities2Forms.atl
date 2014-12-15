@@ -6,6 +6,19 @@ create OUT : Forms from IN : Forms;
 helper def: id : Integer = 0;
 helper context Integer def : inc() : Integer = self + 1;
 
+-- recurse
+helper def: recurseEntity(e : Forms!Entity) : Collection(Forms!Attribute) =
+	let features : Collection(Forms!Attribute) = Collection(Forms!Attribute)		
+	in
+	if (e.superType.oclIsUndefined() = false) then
+		-- e.superType.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
+		e.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
+	else
+		e.features->select(f1 | f1.oclIsTypeOf(Forms!Attribute))
+	endif
+	
+;
+
 -- determines whether the input Entity would be used in a welcome form
 helper def: isWelcomeForm(e : Forms!Entity) : Boolean = 
 	let allReferencedEntities : Sequence(Forms!Entity) = 
@@ -65,13 +78,14 @@ lazy rule EntityToPage {
 		ne : Forms!Entity
 	to
 		p : Forms!Page (
-			title <- thisModule.capitalize(ne.name),
+			title <- thisModule.capitalize(ne.name) + ' Details',
 			pageElements <- ne.features -> select(p1 | p1.oclIsTypeOf(Forms!Attribute))
 		)
 	do {
-		
+--		p.pageElements <- thisModule.recurseEntity(ne) -> collect(f1 | FeatureToPageElement(f1));
 	}
 }
+
 lazy rule RelationshipToPage{
 	from 
 		ne : Forms!Relationship
@@ -88,6 +102,7 @@ abstract rule FeatureToPageElement {
 	to
 		pe : Forms!PageElement
 }
+
 abstract rule RelationshipToRelationshipPageElement extends FeatureToPageElement{
 	from
 		f : Forms!Relationship
@@ -95,9 +110,10 @@ abstract rule RelationshipToRelationshipPageElement extends FeatureToPageElement
 		
 		pe : Forms!RelationshipPageElement (
 			label <- thisModule.capitalize(f.target.name),
-			editingForm <-thisModule.getFormForEntity(f.target)
+			editingForm <- thisModule.getFormForEntity(f.target)
 		)
 }
+
 rule RelationshipToList extends RelationshipToRelationshipPageElement{
 	from
 		f : Forms!Relationship
@@ -149,7 +165,7 @@ rule AttributeToTextFieldEmail extends FeatureToPageElement {
 		pe.attribute <- f;
 		thisModule.id <- thisModule.id.inc();
 		pe.elementID <- thisModule.id.inc().toString();
-		pe.format='^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$';
+		-- pe.format='^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$';
 	}
 }
 rule AttributeToTextFieldBoolean extends FeatureToPageElement {
