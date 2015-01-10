@@ -13,6 +13,7 @@ import at.ac.tuwien.big.forms.Literal
 import java.util.List
 import at.ac.tuwien.big.forms.Attribute
 import at.ac.tuwien.big.forms.AttributeType
+import at.ac.tuwien.big.forms.Relationship
 
 class Form2AlloyGenerator implements IGenerator {
 
@@ -52,25 +53,38 @@ class Form2AlloyGenerator implements IGenerator {
 	
 	
 	def generateCodeFeatures(List<Feature> features)  {
+		var out = "";
+		var first = 1;
 		for (Feature f : features) {
-			if (f instanceof Attribute) {
-				//System.out.println("Attribute");
-				return f.generateCodeAttribute();
+			if (first == 1) {
+				first = 0;
 			} else {
+				out+=",\n"
+			}
+			if (f instanceof Attribute) {
+				
+				//System.out.println("Attribute");
+				out+= (f as Attribute).generateCodeAttribute();
+			} else if (f instanceof Relationship){
 				//System.out.println("Not a Attribute");
+				out+= (f as Relationship).generateCodeRelationship();
+			} else {
+				out+="unknown";
 			}
 		}
+		return out;
 	}
 	
 	def generateCodeAttribute(Attribute att) {
 		if (att.type == AttributeType.NONE) {
-			//System.out.println("NONE");
+			return att.generateCodeAttributeEnumeration();
 		} else {
-			
-			//System.out.println("OTHER");
 			return att.generateCodeAttributePrimitive();
 		}
 	}
+	def generateCodeAttributeEnumeration(Attribute att)
+'''	«att.name»: «IF att.mandatory == true»one «ELSE»lone «ENDIF»«att.enumeration.name»'''
+
 	def generateCodeAttributePrimitive(Attribute att)
 '''	«att.name»: «IF att.mandatory == true»one «ELSE»lone «ENDIF»Int'''
 	
@@ -81,7 +95,16 @@ class Form2AlloyGenerator implements IGenerator {
 }'''
 	}
 	
-	
+	def generateCodeRelationship(Relationship rel) {
+'''	«rel.name»: «
+IF rel.lowerBound == 0 && rel.upperBound == 1»lone «
+ELSEIF rel.lowerBound == 1 && rel.upperBound == 1»one «
+ELSEIF rel.lowerBound == 1 && rel.upperBound == -1»some «
+ELSEIF rel.lowerBound == 0 && 
+rel.upperBound == -1»set «
+ELSE»set « // TODO: add fact constraints for this case!!!
+ENDIF»«rel.target.name»'''
+	}
 	
 	
 	def generateCodeLiteral(Literal l) 
