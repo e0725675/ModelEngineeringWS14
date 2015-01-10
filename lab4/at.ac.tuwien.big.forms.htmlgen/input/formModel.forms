@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:FormModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:forms="http://www.big.tuwien.ac.at/forms">
+  <forms name="PublicationForm" title="PublicationForm" description="Form for scientific publications" welcomeForm="true">
+    <entity href="entityModel.forms#//@entityModelElements.0"/>
+    <pages title="PublicationDetails">
+      <pageElements xsi:type="forms:TextField" label="Title" elementID="01" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Keywords" elementID="02" format="^([a-zA-Z]+, )+[a-zA-Z]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.1"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextArea" label="Abstract" elementID="03">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.2"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="DOI" elementID="04">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.3"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Year" elementID="05" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.4"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="From page" elementID="06" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.5"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Until page" elementID="07" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.6"/>
+      </pageElements>
+      <pageElements xsi:type="forms:SelectionField" label="Publication type" elementID="08">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.7"/>
+      </pageElements>
+      <pageElements xsi:type="forms:SelectionField" label="Assigned faculty" elementID="09">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.8"/>
+      </pageElements>
+      <pageElements xsi:type="forms:SelectionField" label="Research field" elementID="10">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.9"/>
+      </pageElements>
+    </pages>
+    <pages title="Authors">
+      <pageElements xsi:type="forms:Table" label="Authors" elementID="11" editingForm="//@forms.1">
+        <relationship href="entityModel.forms#//@entityModelElements.0/@features.10"/>
+        <columns label="First name" elementID="12">
+          <attribute href="entityModel.forms#//@entityModelElements.1/@features.0"/>
+        </columns>
+        <columns label="Last name" elementID="13">
+          <attribute href="entityModel.forms#//@entityModelElements.1/@features.1"/>
+        </columns>
+        <columns label="E-Mail" elementID="14">
+          <attribute href="entityModel.forms#//@entityModelElements.1/@features.2"/>
+        </columns>
+      </pageElements>
+    </pages>
+    <pages title="Proceedings">
+      <pageElements xsi:type="forms:List" label="Proceedings" elementID="15" editingForm="//@forms.2">
+        <relationship href="entityModel.forms#//@entityModelElements.0/@features.11"/>
+      </pageElements>
+      <condition xsi:type="forms:CompositeCondition" type="Show" conditionID="1" compositionType="Or">
+        <composedConditions xsi:type="forms:AttributeValueCondition" type="Show" conditionID="2" value="CP">
+          <attribute href="entityModel.forms#//@entityModelElements.0/@features.7"/>
+        </composedConditions>
+        <composedConditions xsi:type="forms:AttributeValueCondition" type="Show" conditionID="3" value="WP">
+          <attribute href="entityModel.forms#//@entityModelElements.0/@features.7"/>
+        </composedConditions>
+      </condition>
+    </pages>
+    <pages title="Journal">
+      <pageElements xsi:type="forms:List" label="Journal" elementID="16" editingForm="//@forms.3">
+        <relationship href="entityModel.forms#//@entityModelElements.0/@features.12"/>
+      </pageElements>
+      <condition xsi:type="forms:AttributeValueCondition" type="Show" conditionID="4" value="JA">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.7"/>
+      </condition>
+    </pages>
+    <pages title="Book">
+      <pageElements xsi:type="forms:List" label="Book" elementID="17" editingForm="//@forms.4">
+        <relationship href="entityModel.forms#//@entityModelElements.0/@features.13"/>
+      </pageElements>
+      <condition xsi:type="forms:AttributeValueCondition" type="Show" conditionID="5" value="BC">
+        <attribute href="entityModel.forms#//@entityModelElements.0/@features.7"/>
+      </condition>
+    </pages>
+  </forms>
+  <forms name="PersonForm" title="PersonForm">
+    <entity href="entityModel.forms#//@entityModelElements.1"/>
+    <pages title="PersonDetails">
+      <pageElements xsi:type="forms:TextField" label="First name" elementID="18" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.1/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Last name" elementID="19" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.1/@features.1"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="E-Mail" elementID="20" format="^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$">
+        <attribute href="entityModel.forms#//@entityModelElements.1/@features.2"/>
+      </pageElements>
+      <pageElements xsi:type="forms:SelectionField" label="Faculty-external" elementID="21">
+        <attribute href="entityModel.forms#//@entityModelElements.1/@features.3"/>
+      </pageElements>
+      <pageElements xsi:type="forms:SelectionField" label="Faculty" elementID="22">
+        <condition xsi:type="forms:AttributeValueCondition" conditionID="6" value="true">
+          <attribute href="entityModel.forms#//@entityModelElements.1/@features.3"/>
+        </condition>
+        <attribute href="entityModel.forms#//@entityModelElements.1/@features.4"/>
+      </pageElements>
+    </pages>
+  </forms>
+  <forms name="ProceedingsForm" title="ProceedingsForm">
+    <entity href="entityModel.forms#//@entityModelElements.2"/>
+    <pages title="ProceedingsDetails">
+      <pageElements xsi:type="forms:TextField" label="Title" elementID="23" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.5/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Publisher" elementID="24">
+        <attribute href="entityModel.forms#//@entityModelElements.2/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Volume" elementID="25" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.2/@features.1"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="ISBN" elementID="26">
+        <attribute href="entityModel.forms#//@entityModelElements.2/@features.2"/>
+      </pageElements>
+      <pageElements xsi:type="forms:List" label="Editors" elementID="27" editingForm="//@forms.1">
+        <relationship href="entityModel.forms#//@entityModelElements.2/@features.4"/>
+      </pageElements>
+      <pageElements xsi:type="forms:List" label="Event" elementID="28" editingForm="//@forms.5">
+        <relationship href="entityModel.forms#//@entityModelElements.2/@features.3"/>
+      </pageElements>
+    </pages>
+  </forms>
+  <forms name="JournalForm" title="JournalForm">
+    <entity href="entityModel.forms#//@entityModelElements.3"/>
+    <pages title="JournalDetails">
+      <pageElements xsi:type="forms:TextField" label="Title" elementID="29" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.5/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Volume" elementID="30" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.3/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Number" elementID="31" format="^[0-9]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.3/@features.1"/>
+      </pageElements>
+    </pages>
+  </forms>
+  <forms name="BookForm" title="BookForm">
+    <entity href="entityModel.forms#//@entityModelElements.4"/>
+    <pages title="BookDetails">
+      <pageElements xsi:type="forms:TextField" label="Title" elementID="32" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.5/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Publisher" elementID="33">
+        <attribute href="entityModel.forms#//@entityModelElements.4/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="ISBN" elementID="34">
+        <attribute href="entityModel.forms#//@entityModelElements.4/@features.1"/>
+      </pageElements>
+    </pages>
+  </forms>
+  <forms name="EventForm" title="EventForm">
+    <entity href="entityModel.forms#//@entityModelElements.6"/>
+    <pages title="EventDetails">
+      <pageElements xsi:type="forms:TextField" label="Title" elementID="35" format="^[a-zA-Z -]+$">
+        <attribute href="entityModel.forms#//@entityModelElements.6/@features.0"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="City" elementID="36">
+        <attribute href="entityModel.forms#//@entityModelElements.6/@features.1"/>
+      </pageElements>
+      <pageElements xsi:type="forms:TextField" label="Country" elementID="37">
+        <attribute href="entityModel.forms#//@entityModelElements.6/@features.2"/>
+      </pageElements>
+      <pageElements xsi:type="forms:DateSelectionField" label="From date" elementID="38">
+        <attribute href="entityModel.forms#//@entityModelElements.6/@features.3"/>
+      </pageElements>
+      <pageElements xsi:type="forms:DateSelectionField" label="Until date" elementID="39">
+        <attribute href="entityModel.forms#//@entityModelElements.6/@features.4"/>
+      </pageElements>
+    </pages>
+  </forms>
+</forms:FormModel>

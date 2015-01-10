@@ -1,0 +1,35 @@
+module at.ac.tuwien.big.forms.htmlgen.Form2HTMLGenerator
+
+import org.eclipse.emf.mwe.utils.*
+
+var inputDir = "input"
+var outputDir = "output"
+
+Workflow {
+
+	bean = StandaloneSetup {
+		registerGeneratedEPackage = "at.ac.tuwien.big.forms.FormsPackage"
+	}
+
+	component = DirectoryCleaner {
+		directory = outputDir
+	}
+
+	component = at.ac.tuwien.big.forms.htmlgen.Form2HTMLGeneratorSupport {}
+
+	component = OCLEnabledResourceReader {
+		path = inputDir
+		register = at.ac.tuwien.big.forms.htmlgen.Form2HTMLGeneratorSetup {}
+		loadResource = {
+			slot = "package"
+		}
+	}
+
+	component = org.eclipse.xtext.generator.GeneratorComponent {
+		register = at.ac.tuwien.big.forms.htmlgen.Form2HTMLGeneratorSetup {}
+		slot = 'package'
+		outlet = {
+			path = outputDir
+		}
+	}
+}

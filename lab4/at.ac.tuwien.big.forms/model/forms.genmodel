@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/at.ac.tuwien.big.forms/src" modelPluginID="at.ac.tuwien.big.forms"
+    modelName="Forms" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>forms.ecore</foreignModel>
+  <genPackages prefix="Forms" basePackage="at.ac.tuwien.big" disposableProviderFactory="true"
+      generateExampleClass="false" ecorePackage="forms.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="forms.ecore#//AttributeType">
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/String"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Text"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Date"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Time"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Email"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/Year"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//AttributeType/None"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="forms.ecore#//ConditionType">
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//ConditionType/Hide"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//ConditionType/Show"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//ConditionType/Enable"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//ConditionType/Disable"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//ConditionType/None"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="forms.ecore#//CompositeConditionType">
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//CompositeConditionType/And"/>
+      <genEnumLiterals ecoreEnumLiteral="forms.ecore#//CompositeConditionType/Or"/>
+    </genEnums>
+    <genClasses ecoreClass="forms.ecore#//Entity">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Entity/features"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Entity/id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Entity/superType"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Attribute/mandatory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Attribute/enumeration"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Relationship">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Relationship/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Relationship/upperBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Relationship/lowerBound"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Relationship/opposite"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Enumeration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Enumeration/literals"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Literal">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Literal/value"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//EntityModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//EntityModel/entityModelElements"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="forms.ecore#//EntityModelElement"/>
+    <genClasses image="false" ecoreClass="forms.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//FormModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//FormModel/forms"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Form">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//Form/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Form/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Form/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Form/pages"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Form/welcomeForm"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Page">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Page/title"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Page/pageElements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Page/condition"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="forms.ecore#//Feature"/>
+    <genClasses image="false" ecoreClass="forms.ecore#//PageElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//PageElement/label"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//PageElement/condition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//PageElement/elementID"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//TextField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//TextField/format"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//TextArea"/>
+    <genClasses ecoreClass="forms.ecore#//SelectionField"/>
+    <genClasses ecoreClass="forms.ecore#//List"/>
+    <genClasses ecoreClass="forms.ecore#//Table">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//Table/columns"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//Column"/>
+    <genClasses image="false" ecoreClass="forms.ecore#//Condition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Condition/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//Condition/conditionID"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//AttributeValueCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//AttributeValueCondition/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//AttributeValueCondition/attribute"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//CompositeCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute forms.ecore#//CompositeCondition/compositionType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference forms.ecore#//CompositeCondition/composedConditions"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="forms.ecore#//AttributePageElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//AttributePageElement/attribute"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="forms.ecore#//RelationshipPageElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//RelationshipPageElement/relationship"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference forms.ecore#//RelationshipPageElement/editingForm"/>
+    </genClasses>
+    <genClasses ecoreClass="forms.ecore#//DateSelectionField"/>
+    <genClasses ecoreClass="forms.ecore#//TimeSelectionField"/>
+  </genPackages>
+</genmodel:GenModel>

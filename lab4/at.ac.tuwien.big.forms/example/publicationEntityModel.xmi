@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ASCII"?>
+<forms:EntityModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:forms="http://www.big.tuwien.ac.at/forms" xsi:schemaLocation="http://www.big.tuwien.ac.at/forms ../model/forms.ecore">
+  <entityModelElements xsi:type="forms:Entity" name="Publication" id="//@entityModelElements.0/@features.0">
+    <features xsi:type="forms:Attribute" name="title" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="keywords" type="String"/>
+    <features xsi:type="forms:Attribute" name="abstract" type="Text"/>
+    <features xsi:type="forms:Attribute" name="doi" type="String"/>
+    <features xsi:type="forms:Attribute" name="year" type="Year"/>
+    <features xsi:type="forms:Attribute" name="fromPage" type="Integer"/>
+    <features xsi:type="forms:Attribute" name="untilPage" type="Integer"/>
+    <features xsi:type="forms:Attribute" name="type" mandatory="true" enumeration="//@entityModelElements.9"/>
+    <features xsi:type="forms:Attribute" name="assignedFaculty" mandatory="true" enumeration="//@entityModelElements.7"/>
+    <features xsi:type="forms:Attribute" name="field" mandatory="true" enumeration="//@entityModelElements.8"/>
+    <features xsi:type="forms:Relationship" name="authors" target="//@entityModelElements.1" upperBound="-1" opposite="//@entityModelElements.1/@features.5"/>
+    <features xsi:type="forms:Relationship" name="proceedings" target="//@entityModelElements.2" lowerBound="0"/>
+    <features xsi:type="forms:Relationship" name="journal" target="//@entityModelElements.3" lowerBound="0"/>
+    <features xsi:type="forms:Relationship" name="book" target="//@entityModelElements.4" lowerBound="0"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Person" id="//@entityModelElements.1/@features.2">
+    <features xsi:type="forms:Attribute" name="firstname" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="lastname" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="email" type="Email" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="external" type="Boolean" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="faculty" enumeration="//@entityModelElements.7"/>
+    <features xsi:type="forms:Relationship" name="publications" target="//@entityModelElements.0" upperBound="-1" lowerBound="0" opposite="//@entityModelElements.0/@features.10"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Proceedings" id="//@entityModelElements.5/@features.0" superType="//@entityModelElements.5">
+    <features xsi:type="forms:Attribute" name="publisher" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="volume" type="Integer"/>
+    <features xsi:type="forms:Attribute" name="isbn" type="String"/>
+    <features xsi:type="forms:Relationship" name="event" target="//@entityModelElements.6"/>
+    <features xsi:type="forms:Relationship" name="editors" target="//@entityModelElements.1" upperBound="-1" lowerBound="0"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Journal" id="//@entityModelElements.5/@features.0" superType="//@entityModelElements.5">
+    <features xsi:type="forms:Attribute" name="volume" type="Integer" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="number" type="Integer" mandatory="true"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Book" id="//@entityModelElements.5/@features.0" superType="//@entityModelElements.5">
+    <features xsi:type="forms:Attribute" name="publisher" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="isbn" type="String"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="PublicationVenue" id="//@entityModelElements.5/@features.0">
+    <features xsi:type="forms:Attribute" name="title" type="String" mandatory="true"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Event" id="//@entityModelElements.6/@features.0">
+    <features xsi:type="forms:Attribute" name="title" type="String" mandatory="true"/>
+    <features xsi:type="forms:Attribute" name="city" type="String"/>
+    <features xsi:type="forms:Attribute" name="country" type="String"/>
+    <features xsi:type="forms:Attribute" name="fromDate" type="Date"/>
+    <features xsi:type="forms:Attribute" name="untilDate" type="Date"/>
+    <features xsi:type="forms:Attribute" name="startTime" type="Time"/>
+    <features xsi:type="forms:Attribute" name="endTime" type="Time"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Enumeration" name="Faculty">
+    <literals name="AP" value="Faculty of Architecture and Planning"/>
+    <literals name="CE" value="Faculty of Civil Engineering"/>
+    <literals name="MIE" value="Faculty of Mechanical and Industrial Engineering"/>
+    <literals name="EEIT" value="Faculty of Electrical Engineering and Information Technology"/>
+    <literals name="MG" value="Faculty of Mathematics and Geoinformation"/>
+    <literals name="P" value="Faculty of Physics"/>
+    <literals name="TC" value="Faculty of Technical Chemistry"/>
+    <literals name="I" value="Faculty of Informatics"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Enumeration" name="ResearchField">
+    <literals name="CSE" value="Computational Science and Engineering"/>
+    <literals name="QPQT" value="Quantum Physics and Quantum Technologies"/>
+    <literals name="MM" value="Materials and Matter"/>
+    <literals name="ICT" value="Information and Communication Technology"/>
+    <literals name="EE" value="Energy and Environment"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Enumeration" name="PublicationType">
+    <literals name="JA" value="Journal Article"/>
+    <literals name="BC" value="Book Chapter"/>
+    <literals name="CP" value="ConferencePaper"/>
+    <literals name="WP" value="WorkshopPaper"/>
+  </entityModelElements>
+</forms:EntityModel>

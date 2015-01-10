@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: HTML Generator for Forms
+Bundle-SymbolicName: at.ac.tuwien.big.form.htmlgen
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: www.big.tuwien.ac.at
+Require-Bundle: org.eclipse.emf.ecore.xmi;bundle-version="2.9.0",
+ org.eclipse.xtext.generator;bundle-version="2.4.2",
+ com.google.inject;bundle-version="3.0.0",
+ org.eclipse.xtext;bundle-version="2.4.2",
+ org.eclipse.emf.mwe2.launch;bundle-version="2.4.0",
+ org.apache.commons.logging;bundle-version="1.1.1",
+ org.apache.log4j;bundle-version="1.2.15",
+ org.eclipse.ocl.examples.pivot;bundle-version="3.3.1",
+ org.eclipse.ocl.examples.xtext.completeocl;bundle-version="3.3.0",
+ org.eclipse.ocl.examples.xtext.essentialocl;bundle-version="3.3.1",
+ org.eclipse.ocl.examples.xtext.oclinecore;bundle-version="3.3.0",
+ org.eclipse.ocl.examples.xtext.oclstdlib;bundle-version="3.3.0",
+ org.eclipse.uml2.uml.resources;bundle-version="5.0.0",
+ at.ac.tuwien.big.forms;bundle-version="0.1.0",
+ org.eclipse.xtext.xbase.lib.source;bundle-version="2.6.0",
+ org.eclipse.xtext.generator.source;bundle-version="2.6.0"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms:EntityModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:forms="http://www.big.tuwien.ac.at/forms">
+  <entityModelElements xsi:type="forms:Entity" name="Student" id="//@entityModelElements.0/@features.0">
+    <features xsi:type="forms:Attribute" name="name" type="String" mandatory="true"/>
+    <features xsi:type="forms:Relationship" name="likes" target="//@entityModelElements.1" opposite="//@entityModelElements.1/@features.2"/>
+    <features xsi:type="forms:Relationship" name="enrols" target="//@entityModelElements.1" opposite="//@entityModelElements.1/@features.1"/>
+  </entityModelElements>
+  <entityModelElements xsi:type="forms:Entity" name="Course" id="//@entityModelElements.1/@features.0">
+    <features xsi:type="forms:Attribute" name="title" type="String" mandatory="true"/>
+    <features xsi:type="forms:Relationship" name="isEnroledBy" target="//@entityModelElements.0" upperBound="-1" lowerBound="10" opposite="//@entityModelElements.0/@features.2"/>
+    <features xsi:type="forms:Relationship" name="isLikedBy" target="//@entityModelElements.0" upperBound="5" lowerBound="5" opposite="//@entityModelElements.0/@features.1"/>
+  </entityModelElements>
+</forms:EntityModel>
