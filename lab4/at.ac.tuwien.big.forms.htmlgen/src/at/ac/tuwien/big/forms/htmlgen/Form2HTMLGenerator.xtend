@@ -32,16 +32,16 @@ class Form2HTMLGenerator implements IGenerator {
 			'''<!DOCTYPE html>
 				<html lang="en">
 				«generateHead(formModel)»
-					<body>
+					<body>					
+					«generateBody(formModel)»
+					<!-- htmlelements -->
 «««					add HTML elements here
 					</body>
 				</html>'''	
 		)
 	}
 	
-	
-
-// 	«»
+	// 	«»
 
 	def generateHead(FormModel formModel) {
 		'''<head>
@@ -56,7 +56,6 @@ class Form2HTMLGenerator implements IGenerator {
 				function(){
 					«FOR form : formModel.forms»
 					«form.generateForm»
-					bleh bleh formaldjflkdaj
 					«ENDFOR»
 «««				register HTML elements here
 				form.init();
@@ -65,9 +64,40 @@ class Form2HTMLGenerator implements IGenerator {
 			</head>'''
 	}
 	
+	def generateBody(FormModel zeeForms) {
+		'''«FOR form : zeeForms.forms»
+			<div class="form" id="«form.name»">
+				<form action="#" class="register">
+
+					<h1>«form.name»</h1>
+					<h2>«form.description»</h2>
+					<div class="page" id="«form.name»">
+					«FOR page : form.pages»
+					«generatePage(page)»
+					«ENDFOR»
+				</form>
+			</div>
+			«ENDFOR»'''
+	}
+	
+	def generatePage(Page zeePage) {
+		'''
+						<div class="page" id="«zeePage.title»">
+							<fieldset class="row1">
+								<h3>«zeePage.title»</h3>
+							</fieldset>
+						</div>	
+		'''
+	}
+		
 	def generateForm(Form zeeForm) {
-		logger.log(Level.INFO, "generateForm Form");
-		logger.log(Level.INFO, zeeForm.entity.name)
+		if(zeeForm.isWelcomeForm) {
+			'''form.addWelcomeForm('«zeeForm.name»')'''
+		} 
+		else {
+			'''form.addRelationshipPageElement('«zeeForm.name»')'''
+//			'Proceedings', '15', 'ProceedingsForm', 'list', '0', '1'
+		}
 	}
 	
 //	def dispatch generateForm(Enumeration zeeEnum) {
