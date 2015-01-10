@@ -6,14 +6,18 @@ import at.ac.tuwien.big.forms.FormModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import at.ac.tuwien.big.forms.*
 
 class Form2HTMLGenerator implements IGenerator {
 	
 	private Logger logger = null;
-
+	
 	override doGenerate(Resource resource, IFileSystemAccess fsa) {
 		
-		logger = Logger.getLogger("logger");
+		if(logger == null) {
+			logger = Logger.getLogger("logger");			
+		}
+		
 		logger.log(Level.INFO, "starting doGenerate");
 		val listOfModels = resource.resourceSet.resources
 		var formModel = null as FormModel
@@ -36,7 +40,9 @@ class Form2HTMLGenerator implements IGenerator {
 	}
 	
 	
-			
+
+// 	«»
+
 	def generateHead(FormModel formModel) {
 		'''<head>
 				<title>Form</title>
@@ -47,11 +53,25 @@ class Form2HTMLGenerator implements IGenerator {
 				<script src="../assets/form.js" type="text/javascript"></script>
 				<script type="text/javascript">
 				$(document).ready(
-				function(){				 
+				function(){
+					«FOR form : formModel.forms»
+					«form.generateForm»
+					bleh bleh formaldjflkdaj
+					«ENDFOR»
 «««				register HTML elements here
 				form.init();
 				});
 				</script>
 			</head>'''
 	}
+	
+	def generateForm(Form zeeForm) {
+		logger.log(Level.INFO, "generateForm Form");
+		logger.log(Level.INFO, zeeForm.entity.name)
+	}
+	
+//	def dispatch generateForm(Enumeration zeeEnum) {
+//		logger.log(Level.INFO, "generateForm Enumeration");				
+//	}
+	
 }
