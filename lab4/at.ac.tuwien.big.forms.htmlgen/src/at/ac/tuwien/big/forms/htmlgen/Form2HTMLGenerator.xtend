@@ -46,7 +46,8 @@ class Form2HTMLGenerator implements IGenerator {
 	// 	«»
 
 	def generateHead(FormModel formModel) {
-		'''<head>
+			'''
+			<head>
 				<title>Form</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 				<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
@@ -97,26 +98,26 @@ class Form2HTMLGenerator implements IGenerator {
 					<h1>«form.name»</h1>
 					«IF form.description != null»<h2>«form.description»</h2>«ENDIF»
 					«FOR page : form.pages»
-					«generatePage(form, page)»
+					«generatePage(page)»
 					«ENDFOR»
 				</form>
 			</div>
 			«ENDFOR»'''
 	}
 	
-	def generatePage(Form zeeForm, Page zeePage) {
+	def generatePage(Page zeePage) {
 		'''
 						<div class="page" id="«zeePage.title»">
 							<fieldset class="row1">
 								<h3>«zeePage.title»</h3>
 								«FOR pageElement : zeePage.pageElements»
-								«generateElement(zeeForm, pageElement)»
+								«generateElement(pageElement)»
 								«ENDFOR»
 							</fieldset>
 						</div>'''
 	}
 	
-	def dispatch generateElement(Form zeeForm, RelationshipPageElement rpe) {
+	def dispatch generateElement(RelationshipPageElement rpe) {
 		generateRelPageElement(rpe);		
 	}
 	
@@ -124,9 +125,9 @@ class Form2HTMLGenerator implements IGenerator {
 		'''
 						<div class="table" id="«table.elementID»">
 						<fieldset class="row1">
-							<legend class="legend">«table.label»</legend>
+							<legend class="legend">«table.label» Table</legend>
 							<table>
-								<tr id=«table.elementID»_header>
+								<tr id="«table.elementID»_header">
 								«FOR column : table.columns»
 									<th class="mandatory">«column.label»</th>
 								«ENDFOR»
@@ -138,11 +139,11 @@ class Form2HTMLGenerator implements IGenerator {
 	
 	def dispatch generateRelPageElement(List list) {
 		'''
-						<div class="list" id="«list.elementID»"><fieldset class="row1"><legend class="legend">Proceedings List</legend><ul></ul></fieldset></div>'''
+						<div class="list" id="«list.elementID»"><fieldset class="row1"><legend class="legend">«list.label» List</legend><ul></ul></fieldset></div>'''
 	}
 	
-	def dispatch generateElement(Form zeeForm, AttributePageElement ape) {
-		generateField(zeeForm, ape);
+	def dispatch generateElement(AttributePageElement ape) {
+		generateField(ape);
 	}
 	
 	def boolean isAttributeMandatory(Attribute attr) {
@@ -152,19 +153,19 @@ class Form2HTMLGenerator implements IGenerator {
 	/*
 	 * dAttributePageElements
 	 */
-	def dispatch generateField(Form zeeForm, TextField field) {
+	def dispatch generateField(TextField field) {
 		var mandatory = isAttributeMandatory(field.attribute);
 		
 		'''
-									<p><label for="«field.elementID»">«field.label»«IF mandatory == true» <span>*</span>«ENDIF»</label><input type="text" id="«field.elementID»" «IF mandatory == true»class="mandatory"«ENDIF» /></p>'''
+									<p><label for="«field.elementID»">«field.label»«IF mandatory == true» <span>*</span>«ENDIF»</label><input type="text" id="«field.elementID»" «IF mandatory == true»class="mandatory"«ENDIF»/></p>'''
 	}
 	
-	def dispatch generateField(Form zeeForm, TextArea field) {
+	def dispatch generateField(TextArea field) {
 		'''
 							<p><label for="«field.elementID»">Abstract</label><textarea id="«field.elementID»"></textarea></p>'''
 	}
 
-	def dispatch generateField(Form zeeForm, SelectionField field) {
+	def dispatch generateField(SelectionField field) {
 		var mandatory = isAttributeMandatory(field.attribute);
 		var Attribute attr = field.attribute;
 		var Enumeration penum = attr.enumeration;
@@ -176,7 +177,7 @@ class Form2HTMLGenerator implements IGenerator {
 			selectFieldIsBoolean = true;
 		}
 		'''
-							<p><label for="«field.elementID»" >«field.label» <span>«IF mandatory == true»*«ENDIF»</span></label>
+							<p><label for="«field.elementID»" >«field.label» «IF mandatory == true»<span>*</span>«ENDIF»</label>
 							<select id="«field.elementID»" name="«attr.name»" «IF mandatory == true»class="mandatory"«ENDIF»>
 								<option value="default"> </option>
 							«IF selectFieldIsBoolean == true »
@@ -191,11 +192,11 @@ class Form2HTMLGenerator implements IGenerator {
 							</p>'''
 	}
 
-	def dispatch generateField(Form zeeForm, DateSelectionField field) {
+	def dispatch generateField(DateSelectionField field) {
 		// @TODO?
 	}
 
-	def dispatch generateField(Form zeeForm, TimeSelectionField field) {
+	def dispatch generateField(TimeSelectionField field) {
 		// @TODO?
 	}
 		
