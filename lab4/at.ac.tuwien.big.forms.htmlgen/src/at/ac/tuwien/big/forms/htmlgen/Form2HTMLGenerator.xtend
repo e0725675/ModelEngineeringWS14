@@ -7,8 +7,8 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import at.ac.tuwien.big.forms.*
-import java.util.EventListener
 import org.eclipse.emf.common.util.EList
+import java.util.EventObject
 import org.eclipse.emf.ecore.EObject
 
 class Form2HTMLGenerator implements IGenerator {
@@ -58,7 +58,7 @@ class Form2HTMLGenerator implements IGenerator {
 				$(document).ready(
 				function(){
 					«FOR form : formModel.forms»
-					«form.generateForm»
+					«form.generateJSForm»
 					«ENDFOR»
 «««				register HTML elements here
 				form.init();
@@ -76,43 +76,80 @@ class Form2HTMLGenerator implements IGenerator {
 					<h2>«form.description»</h2>
 					<div class="page" id="«form.name»">
 					«FOR page : form.pages»
-					«generatePage(page)»
+					«generatePage(form, page)»
 					«ENDFOR»
 				</form>
 			</div>
 			«ENDFOR»'''
 	}
 	
-	def generatePage(Page zeePage) {
+	def generatePage(Form zeeForm, Page zeePage) {
 		'''
 						<div class="page" id="«zeePage.title»">
 							<fieldset class="row1">
 								<h3>«zeePage.title»</h3>
+								«FOR pageElement : zeePage.pageElements»
+								«generateElement(zeeForm, pageElement)»
+								«ENDFOR»
+								
 							</fieldset>
-						</div>	
+						</div>
 		'''
 	}
 	
-	def generatePageElements(EList<PageElement> elements) {	
-			
+	def dispatch generateElement(Form zeeForm, RelationshipPageElement rpe) {
 		
 	}
 	
-	/**
-	 * helper
+	def dispatch generateElement(Form zeeForm, AttributePageElement ape) {
+		generateField(zeeForm, ape);
+	}
+	
+	/*
+	 * dAttributePageElements
 	 */
- 	def getEntityFromPageElement(PageElement pe) {
- 		var EObject pageObj = pe.eContainer()
- 		var Form formObj = pageObj.eContainer() as Form
- 		var Entity entityObj = formObj.getEntity()
- 		var EList<Feature> featureObj = entityObj.getFeatures()
- 		var Integer elementID = new Integer(pe.elementID)
- 		featureObj.get(elementID)
- 		 		
-//	    elements.get(0)
+	def dispatch generateField(Form zeeForm, TextField field) {
+		'''
+									<p><label for="«field.elementID»">«field.label»<span>*TODO</span></label><input type="text" id="«field.elementID»" class="mandatoryTODO"/></p>'''
+		
+	}
+	
+	def dispatch generateField(Form zeeForm, TextArea field) {
+		
+		
+	}
+
+	def dispatch generateField(Form zeeForm, SelectionField field) {
+		var boolean mandatory = false;
+		var Attribute attr = field.attribute;
+		if(attr.mandatory == true) {
+			mandatory = true;
+		}
+		'''
+							<p><label for="«field.elementID»" >«field.label»<span>*TODO</span></label>
+							<select id="«field.elementID»" name="«field.label»TODO" class="mandatoryTODO">
+«««								<option value="default"> </option>
+«««								<option value="JA">Journal Article</option>
+«««								<option value="BC">Book Chapter</option>
+«««								<option value="CP">Conference Paper</option>
+«««								<option value="WP">Workshop Paper</option>
+							</select></p>
+		'''
+
+
+	}
+
+	def dispatch generateField(Form zeeForm, DateSelectionField field) {
+		
+		
+	}
+
+	def dispatch generateField(Form zeeForm, TimeSelectionField field) {
+		
+		
 	}
 		
-	def generateForm(Form zeeForm) {
+	def generateJSForm(Form zeeForm) {
 		if(zeeForm.isWelcomeForm) {
 			'''form.addWelcomeForm('«zeeForm.name»')'''
 		} 
@@ -121,9 +158,5 @@ class Form2HTMLGenerator implements IGenerator {
 //			'Proceedings', '15', 'ProceedingsForm', 'list', '0', '1'
 		}
 	}
-	
-//	def dispatch generateForm(Enumeration zeeEnum) {
-//		logger.log(Level.INFO, "generateForm Enumeration");				
-//	}
 	
 }
