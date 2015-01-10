@@ -1,15 +1,20 @@
 package at.ac.tuwien.big.forms.htmlgen
 
 import java.io.File
+import java.util.logging.*;
 import at.ac.tuwien.big.forms.FormModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 
 class Form2HTMLGenerator implements IGenerator {
+	
+	private Logger logger = null;
 
 	override doGenerate(Resource resource, IFileSystemAccess fsa) {
 		
+		logger = Logger.getLogger("logger");
+		logger.log(Level.INFO, "starting doGenerate");
 		val listOfModels = resource.resourceSet.resources
 		var formModel = null as FormModel
 		for(model : listOfModels){
