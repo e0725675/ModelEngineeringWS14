@@ -105,13 +105,18 @@ class Form2HTMLGenerator implements IGenerator {
 		generateField(zeeForm, ape);
 	}
 	
+	def boolean isAttributeMandatory(Attribute attr) {
+		return (attr.mandatory == true)
+	}
+	
 	/*
 	 * dAttributePageElements
 	 */
 	def dispatch generateField(Form zeeForm, TextField field) {
-		'''
-									<p><label for="«field.elementID»">«field.label»<span>*TODO</span></label><input type="text" id="«field.elementID»" class="mandatoryTODO"/></p>'''
+		var mandatory = isAttributeMandatory(field.attribute);
 		
+		'''
+									<p><label for="«field.elementID»">«field.label»<span>«IF mandatory == true»*«ENDIF»</span></label><input type="text" id="«field.elementID»" «IF mandatory == true»class="mandatory"«ENDIF»/></p>'''
 	}
 	
 	def dispatch generateField(Form zeeForm, TextArea field) {
@@ -120,19 +125,30 @@ class Form2HTMLGenerator implements IGenerator {
 	}
 
 	def dispatch generateField(Form zeeForm, SelectionField field) {
-		var boolean mandatory = false;
+		var mandatory = isAttributeMandatory(field.attribute);
 		var Attribute attr = field.attribute;
-		if(attr.mandatory == true) {
-			mandatory = true;
+		var Enumeration penum = attr.enumeration;
+		var EList<Literal> literals = null;
+		var boolean selectFieldIsBoolean = false; 
+		if(attr.type.literal != "Boolean" && penum.literals != null) {
+			literals = penum.literals; 			
+		} else {
+			selectFieldIsBoolean = true;
 		}
+		
 		'''
-							<p><label for="«field.elementID»" >«field.label»<span>*TODO</span></label>
-							<select id="«field.elementID»" name="«field.label»TODO" class="mandatoryTODO">
-«««								<option value="default"> </option>
-«««								<option value="JA">Journal Article</option>
-«««								<option value="BC">Book Chapter</option>
-«««								<option value="CP">Conference Paper</option>
-«««								<option value="WP">Workshop Paper</option>
+							<p><label for="«field.elementID»" >«field.label»<span>«IF mandatory == true»*«ENDIF»</span></label>
+							<select id="«field.elementID»" name="«attr.name»" «IF mandatory == true»class="mandatory"«ENDIF»>
+							<option value="default"> </option>
+							«IF selectFieldIsBoolean == true »
+								<option value="true">Yes</option>
+								<option value="false">No</option>
+							«ELSE»
+								«FOR optionSelect : literals»
+								<option value="«penum.name»">«optionSelect.value»</option>
+								«ENDFOR»
+							«ENDIF»
+
 							</select></p>
 		'''
 
