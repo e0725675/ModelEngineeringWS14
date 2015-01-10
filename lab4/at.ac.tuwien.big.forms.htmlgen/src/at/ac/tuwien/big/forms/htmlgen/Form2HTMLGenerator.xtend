@@ -7,6 +7,9 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import at.ac.tuwien.big.forms.*
+import java.util.EventListener
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 
 class Form2HTMLGenerator implements IGenerator {
 	
@@ -88,6 +91,25 @@ class Form2HTMLGenerator implements IGenerator {
 							</fieldset>
 						</div>	
 		'''
+	}
+	
+	def generatePageElements(EList<PageElement> elements) {	
+			
+		
+	}
+	
+	/**
+	 * helper
+	 */
+ 	def getEntityFromPageElement(PageElement pe) {
+ 		var EObject pageObj = pe.eContainer()
+ 		var Form formObj = pageObj.eContainer() as Form
+ 		var Entity entityObj = formObj.getEntity()
+ 		var EList<Feature> featureObj = entityObj.getFeatures()
+ 		var Integer elementID = new Integer(pe.elementID)
+ 		featureObj.get(elementID)
+ 		 		
+//	    elements.get(0)
 	}
 		
 	def generateForm(Form zeeForm) {
