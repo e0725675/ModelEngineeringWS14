@@ -10,6 +10,9 @@ import at.ac.tuwien.big.forms.EntityModelElement
 import at.ac.tuwien.big.forms.Enumeration
 import at.ac.tuwien.big.forms.Feature
 import at.ac.tuwien.big.forms.Literal
+import java.util.List
+import at.ac.tuwien.big.forms.Attribute
+import at.ac.tuwien.big.forms.AttributeType
 
 class Form2AlloyGenerator implements IGenerator {
 
@@ -30,7 +33,7 @@ class Form2AlloyGenerator implements IGenerator {
 «e.generateCodeEME()»
 «ENDFOR»
 '''
-		)
+)
 	}
 	
 	
@@ -42,15 +45,34 @@ class Form2AlloyGenerator implements IGenerator {
 	
 	def dispatch generateCodeEME(Entity entity) {
 '''sig «entity.name» {
-
+«entity.features.generateCodeFeatures()»
 }'''
 	}
 	
 	
 	
-	def generateCodeAttributes(Feature f) ''''''
+	def generateCodeFeatures(List<Feature> features)  {
+		for (Feature f : features) {
+			if (f instanceof Attribute) {
+				//System.out.println("Attribute");
+				return f.generateCodeAttribute();
+			} else {
+				//System.out.println("Not a Attribute");
+			}
+		}
+	}
 	
-	
+	def generateCodeAttribute(Attribute att) {
+		if (att.type == AttributeType.NONE) {
+			//System.out.println("NONE");
+		} else {
+			
+			//System.out.println("OTHER");
+			return att.generateCodeAttributePrimitive();
+		}
+	}
+	def generateCodeAttributePrimitive(Attribute att)
+'''	«att.name»: «IF att.mandatory == true»one «ELSE»lone «ENDIF»Int'''
 	
 	
 	def dispatch generateCodeEME(Enumeration enumeration) {
