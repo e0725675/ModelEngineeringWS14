@@ -16,9 +16,9 @@ class Form2HTMLGenerator implements IGenerator {
 	private Logger logger = null;
 	
 	override doGenerate(Resource resource, IFileSystemAccess fsa) {
-		
+
 		if(logger == null) {
-			logger = Logger.getLogger("logger");			
+			logger = Logger.getLogger("logger");
 		}
 		
 		logger.log(Level.INFO, "starting doGenerate");
@@ -35,61 +35,37 @@ class Form2HTMLGenerator implements IGenerator {
 			'''<!DOCTYPE html>
 				<html lang="en">
 				«generateHead(formModel)»
-					<body>					
+					<body>
 					«generateBody(formModel)»
 «««					add HTML elements here
 					</body>
-				</html>'''	
+				</html>'''  
 		)
 	}
 	
-	// 	«»
+	//  «»
 
 	def generateHead(FormModel formModel) {
-			'''
-			<head>
-				<title>Form</title>
-				<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-				<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-				<link rel="stylesheet" type="text/css" href="../assets/form.css"/>
-				<script src="../assets/jquery-1.10.2.min.js" type="text/javascript"></script>
-				<script src="../assets/form.js" type="text/javascript"></script>
-				<script type="text/javascript">
-				$(document).ready(
-				function(){				 
-					form.addWelcomeForm(' PublicationForm');
-					form.addRegularExpression('01', '^[a-zA-Z -]+$');
-					form.addRegularExpression('02', '^([a-zA-Z]+, )+[a-zA-Z]+$');
-					form.addRegularExpression('05', '^[0-9]+$');
-					form.addRegularExpression('06', '^[0-9]+$');
-					form.addRegularExpression('07', '^[0-9]+$');
-					form.addRelationshipPageElement('Authors', '11', 'PersonForm', 'table', '1', '-1');
-					form.addCompositeCondition('1',null,'Or');
-					form.addAttributeValueCondition('2',1,'Proceedings','CP','Show');  
-					form.addAttributeValueCondition('3',1,'Proceedings','WP','Show'); 
-					form.addRelationshipPageElement('Proceedings', '15', 'ProceedingsForm', 'list', '0', '1');
-					form.addAttributeValueCondition('4',null,'Journal','JA','Show');
-					form.addRelationshipPageElement('Journal', '16', 'JournalForm', 'list', '0', '1');
-					form.addAttributeValueCondition('5',null,'Book','BC','Show');
-					form.addRelationshipPageElement('Book', '17', 'BookForm', 'list', '0', '1');
-					form.addRegularExpression('18', '^[a-zA-Z -]+$');
-					form.addRegularExpression('19', '^[a-zA-Z -]+$');
-					form.addRegularExpression('20', '^\w+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$');
-					form.addAttributeValueCondition('6',null,'22','true','Hide');
-					form.addRegularExpression('23', '^[a-zA-Z -]+$');
-					form.addRegularExpression('25', '^[0-9]+$');
-					form.addRelationshipPageElement('ProceedingsDetails', '27', 'PersonForm', 'list', '0', '-1');
-					form.addRelationshipPageElement('ProceedingsDetails', '28', 'EventForm', 'list', '1', '1');
-					form.addRegularExpression('29', '^[a-zA-Z -]+$');
-					form.addRegularExpression('30', '^[0-9]+$');
-					form.addRegularExpression('31', '^[0-9]+$');
-					form.addRegularExpression('32', '^[a-zA-Z -]+$');
-					form.addRegularExpression('35', '^[a-zA-Z -]+$');
-					form.init();
-				});
-				</script>
-			</head>'''
+	    '''<head>
+	            <title>Form</title>
+	            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	            <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	            <link rel="stylesheet" type="text/css" href="../assets/form.css"/>
+	            <script src="../assets/jquery-1.10.2.min.js" type="text/javascript"></script>
+	            <script src="../assets/form.js" type="text/javascript"></script>
+	            <script type="text/javascript">
+	            $(document).ready(
+	            function(){
+	                «FOR form : formModel.forms»
+	                «form.generateJSForm»
+	                «ENDFOR»
+	«««             register HTML elements here
+	            form.init();
+	            });
+	            </script>
+	        </head>'''
 	}
+
 	
 	def generateBody(FormModel zeeForms) {
 		'''«FOR form : zeeForms.forms»
