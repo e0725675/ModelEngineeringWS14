@@ -24,3 +24,5 @@ lab3/at.ac.tuwien.big.forms.transformations/model/output.xmi
 **/xtend-gen/
 /lab2/at.ac.tuwien.big.forms.form.ui/src
 /lab2/at.ac.tuwien.big.forms.form/src
+/lab4/at.ac.tuwien.big.forms.htmlgen/output
+/lab4/at.ac.tuwien.big.forms.alloygen/output
