@@ -8,6 +8,8 @@ import at.ac.tuwien.big.forms.EntityModel
 import at.ac.tuwien.big.forms.Entity
 import at.ac.tuwien.big.forms.EntityModelElement
 import at.ac.tuwien.big.forms.Enumeration
+import at.ac.tuwien.big.forms.Feature
+import at.ac.tuwien.big.forms.Literal
 
 class Form2AlloyGenerator implements IGenerator {
 
@@ -17,17 +19,49 @@ class Form2AlloyGenerator implements IGenerator {
 		var name = new File(resource.URI.toFileString).name.replace(".forms", ".als");
 		entityModel.generateFile(fsa, name); // the first argument is the entityModel
 	}
+	
+	
+	
 	def generateFile(EntityModel em, IFileSystemAccess fsa, String fileName) {
 		
 		fsa.generateFile(fileName,
-			'''module ME14
-			«FOR e : em.entityModelElements»
-				«e.generateCode()»:
-			«ENDFOR»
-			'''
+'''module ME14
+«FOR e : em.entityModelElements»
+«e.generateCodeEME()»
+«ENDFOR»
+'''
 		)
 	}
-	def dispatch generateCode(EntityModelElement eme) '''EntityModelElement;''' // fallback
-	def dispatch generateCode(Entity entity) '''Entity «entity.name»'''
-	def dispatch generateCode(Enumeration enumeration) '''Enumeration «enumeration.name»'''
+	
+	
+	
+	def dispatch generateCodeEME(EntityModelElement eme) 
+'''EntityModelElement;''' // fallback
+	
+	
+	
+	def dispatch generateCodeEME(Entity entity) {
+'''sig «entity.name» {
+
+}'''
+	}
+	
+	
+	
+	def generateCodeAttributes(Feature f) ''''''
+	
+	
+	
+	
+	def dispatch generateCodeEME(Enumeration enumeration) {
+'''enum «enumeration.name» {
+«FOR l : enumeration.literals BEFORE '	' SEPARATOR ', ' »«l.generateCodeLiteral()»«ENDFOR»
+}'''
+	}
+	
+	
+	
+	
+	def generateCodeLiteral(Literal l) 
+'''«l.name»'''
 }
