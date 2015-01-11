@@ -10,10 +10,10 @@ sig Course {
 	isLikedBy: set Student
 }
 fact {
-	all c: Course | #c.isLikedBy =< 5
-	all c: Course | #c.isLikedBy >= 5
-	all c: Course | #c.isEnroledBy =< 10
+	all v: Course | #v.isEnroledBy >= 10
+	all v: Course | #v.isLikedBy >= 5
+	all v: Course | #v.isLikedBy =< 5
 }
-//Valid Test 2
-pred show {}
-run show for  40 Student, 40 Course
+//Valid Test 3 -> only an empty set should be found
+pred show {(all s:Student | all c:Course |  no (c.title +  s.name) ) }
+run show for 40 Student, 40 Course

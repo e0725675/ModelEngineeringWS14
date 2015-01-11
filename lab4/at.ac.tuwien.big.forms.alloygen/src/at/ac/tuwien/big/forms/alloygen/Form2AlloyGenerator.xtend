@@ -17,6 +17,7 @@ import at.ac.tuwien.big.forms.Relationship
 import java.util.ArrayList
 
 class Form2AlloyGenerator implements IGenerator {
+	
 	private static class EntityRelationship {
 		public Relationship relationship;
 		public Entity parentEntity;
@@ -24,9 +25,54 @@ class Form2AlloyGenerator implements IGenerator {
 			return "["+this.relationship+","+this.parentEntity+"]";
 		}
 	}
-	var bounds = new ArrayList<EntityRelationship>();
-	override doGenerate(Resource resource, IFileSystemAccess fsa) {
+	
+	private static class OppositeRelationships {
+		public Relationship relationship1=null;
+		public Relationship relationship2=null;
+		public Entity parentRelationship1=null;
+		public Entity parentRelationship2=null;
 		
+		/*
+		 * Returns 0 if not contains;
+		 * returns 1 if == relationship1;
+		 * returns 2 if == relationship2;
+		 */
+		def contains(Relationship relationship) {
+			if (relationship == this.relationship1) {
+				return 1;
+			}
+			if (relationship == this.relationship2) {
+				return 2;
+			}
+			return 0;
+		}
+		
+		def isComplete() {
+			if (relationship1 != null && relationship2 != null && parentRelationship1 != null && parentRelationship2 != null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		def isValid() {
+			if (this.isComplete() && relationship1.opposite == relationship2 && relationship2.opposite == relationship1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		override String toString() {
+			return "["+this.relationship1.name+","+this.relationship2.name+"]";
+		}
+	}
+	
+	var opposites = new ArrayList<OppositeRelationships>();
+	var bounds = new ArrayList<EntityRelationship>();
+	
+	override doGenerate(Resource resource, IFileSystemAccess fsa) {
+		bounds = new ArrayList<EntityRelationship>();
+		opposites = new ArrayList<OppositeRelationships>();
 		var entityModel = resource.contents.get(0) as EntityModel
 		var name = new File(resource.URI.toFileString).name.replace(".forms", ".als");
 		entityModel.generateFile(fsa, name); // the first argument is the entityModel
@@ -43,6 +89,7 @@ class Form2AlloyGenerator implements IGenerator {
 «e.generateCodeEME()»
 «ENDFOR»
 «bounds.generateRelationFactConstraints()»
+«generateRelationBidirectionalFactConstraints()»
 '''
 )
 	}
@@ -112,11 +159,32 @@ ELSEIF rel.lowerBound == 1 && rel.upperBound == 1»one «
 ELSEIF rel.lowerBound == 1 && rel.upperBound == -1»some «
 ELSEIF rel.lowerBound == 0 && 
 rel.upperBound == -1»set «
-ELSE»set «rel.noteSetFact(parentEntity)»« // TODO: add fact constraints for this case!!!
-ENDIF»«rel.target.name»'''
+ELSE»set «rel.noteSetFactBounds(parentEntity)»«
+ENDIF»«rel.target.name»«
+IF rel.opposite != null»«rel.noteSetFactOpposite(parentEntity)»«ENDIF»'''
 	}
 	
-	def noteSetFact(Relationship relationship, Entity parentEntity) {
+	def noteSetFactOpposite(Relationship relationship, Entity parentEntity) {
+		for (OppositeRelationships o : opposites) {
+			var contains = o.contains(relationship.opposite);
+			if (contains == 1) {
+				o.relationship2 = relationship
+				o.parentRelationship2 = parentEntity;
+				return "";
+			} else if (contains == 2) {
+				o.relationship1 = relationship
+				o.parentRelationship1 = parentEntity;
+				return "";
+			}
+		}
+		var o = new OppositeRelationships()
+		o.relationship1 = relationship;
+		o.parentRelationship1 = parentEntity;
+		opposites.add(o);
+		return "";
+	}
+	
+	def noteSetFactBounds(Relationship relationship, Entity parentEntity) {
 		var b = new EntityRelationship();
 		b.relationship = relationship;
 		b.parentEntity = parentEntity;
@@ -128,6 +196,46 @@ ENDIF»«rel.target.name»'''
 '''«l.name»'''
 
 	def generateRelationFactConstraints(ArrayList<EntityRelationship> missingBounds) {
-		''''''
+'''«IF missingBounds.size() > 0»fact {
+«FOR er : missingBounds BEFORE '	' SEPARATOR '
+	' »«er.generateCodeEntityRelationship()»«ENDFOR»
+}«ENDIF»'''
+	}
+	
+	def generateCodeEntityRelationship(EntityRelationship er) {
+		var output = "";
+		if (er.relationship.lowerBound != 1) {
+			output += "all v: "+er.parentEntity.name+" | #v."+er.relationship.name+" >= "+er.relationship.lowerBound;
+		}
+		if (er.relationship.upperBound != -1) {
+			if (er.relationship.lowerBound != 1)
+				output +="\n\t";
+			
+			output += "all v: "+er.parentEntity.name+" | #v."+er.relationship.name+" =< "+er.relationship.upperBound;
+		}
+		return output;
+	}
+	
+	def generateRelationBidirectionalFactConstraints() {
+'''fact {
+«validateOpposites()»«
+	FOR op : opposites BEFORE '	' SEPARATOR '
+	' »«op.generateCodeOppositeRelationship()»«ENDFOR»
+}'''
+	}
+	def validateOpposites() { //TODO: adapt
+		for (OppositeRelationships o : opposites) {
+			if (!o.isValid()) {
+				System.out.println("Invalid opposite: "+o);
+			} else {
+				System.out.println("valid opposite: "+o);
+			}
+		}
+		return "";
+	}
+	def generateCodeOppositeRelationship(OppositeRelationships opp) {
+		if (!opp.isValid()) return "";
+		
+		return "all e1:"+opp.parentRelationship1.name+", e2:"+opp.parentRelationship2.name+" | (e1."+opp.relationship1.name+" in e2 implies e2."+opp.relationship2.name+" in e1) and (e2."+opp.relationship2.name+" in e1 implies e1."+opp.relationship1.name+" in e2)";
 	}
 }
