@@ -59,7 +59,6 @@ class Form2HTMLGenerator implements IGenerator {
 	                «FOR form : formModel.forms»
 	                «form.generateJSForm»
 	                «ENDFOR»
-	«««             register HTML elements here
 	            form.init();
 	            });
 	            </script>
@@ -133,7 +132,7 @@ class Form2HTMLGenerator implements IGenerator {
 		var mandatory = isAttributeMandatory(field.attribute);
 		
 		'''
-									<p><label for="«field.elementID»">«field.label»«IF mandatory == true» <span>*</span>«ENDIF»</label><input type="text" id="«field.elementID»" «IF mandatory == true»class="mandatory"«ENDIF»/></p>'''
+							<p><label for="«field.elementID»">«field.label»«IF mandatory == true» <span>*</span>«ENDIF»</label><input type="text" id="«field.elementID»" «IF mandatory == true»class="mandatory"«ENDIF»/></p>'''
 	}
 	
 	def dispatch generateField(TextArea field) {
@@ -169,11 +168,13 @@ class Form2HTMLGenerator implements IGenerator {
 	}
 
 	def dispatch generateField(DateSelectionField field) {
-		// @TODO?
+		'''
+							<p><label for="«field.elementID»">«field.label»</label><input type="date" id="«field.elementID»"/></p>'''
 	}
 
 	def dispatch generateField(TimeSelectionField field) {
-		// @TODO?
+		'''
+							<p><label for="«field.elementID»">«field.label»</label><input type="time" id="«field.elementID»"/></p>'''
 	}
 		
 	def generateJSForm(Form zeeForm) {
