@@ -14,14 +14,23 @@ import java.util.List
 import at.ac.tuwien.big.forms.Attribute
 import at.ac.tuwien.big.forms.AttributeType
 import at.ac.tuwien.big.forms.Relationship
+import java.util.ArrayList
 
 class Form2AlloyGenerator implements IGenerator {
-
+	private static class EntityRelationship {
+		public Relationship relationship;
+		public Entity parentEntity;
+		override String toString() {
+			return "["+this.relationship+","+this.parentEntity+"]";
+		}
+	}
+	var bounds = new ArrayList<EntityRelationship>();
 	override doGenerate(Resource resource, IFileSystemAccess fsa) {
 		
 		var entityModel = resource.contents.get(0) as EntityModel
 		var name = new File(resource.URI.toFileString).name.replace(".forms", ".als");
 		entityModel.generateFile(fsa, name); // the first argument is the entityModel
+		//System.out.println("bounds: "+bounds);
 	}
 	
 	
@@ -33,6 +42,7 @@ class Form2AlloyGenerator implements IGenerator {
 «FOR e : em.entityModelElements»
 «e.generateCodeEME()»
 «ENDFOR»
+«bounds.generateRelationFactConstraints()»
 '''
 )
 	}
@@ -46,13 +56,13 @@ class Form2AlloyGenerator implements IGenerator {
 	
 	def dispatch generateCodeEME(Entity entity) {
 '''sig «entity.name» {
-«entity.features.generateCodeFeatures()»
+«entity.features.generateCodeFeatures(entity)»
 }'''
 	}
 	
 	
 	
-	def generateCodeFeatures(List<Feature> features)  {
+	def generateCodeFeatures(List<Feature> features, Entity parentEntity)  {
 		var out = "";
 		var first = 1;
 		for (Feature f : features) {
@@ -67,7 +77,7 @@ class Form2AlloyGenerator implements IGenerator {
 				out+= (f as Attribute).generateCodeAttribute();
 			} else if (f instanceof Relationship){
 				//System.out.println("Not a Attribute");
-				out+= (f as Relationship).generateCodeRelationship();
+				out+= (f as Relationship).generateCodeRelationship(parentEntity);
 			} else {
 				out+="unknown";
 			}
@@ -95,18 +105,29 @@ class Form2AlloyGenerator implements IGenerator {
 }'''
 	}
 	
-	def generateCodeRelationship(Relationship rel) {
+	def generateCodeRelationship(Relationship rel, Entity parentEntity) {
 '''	«rel.name»: «
 IF rel.lowerBound == 0 && rel.upperBound == 1»lone «
 ELSEIF rel.lowerBound == 1 && rel.upperBound == 1»one «
 ELSEIF rel.lowerBound == 1 && rel.upperBound == -1»some «
 ELSEIF rel.lowerBound == 0 && 
 rel.upperBound == -1»set «
-ELSE»set « // TODO: add fact constraints for this case!!!
+ELSE»set «rel.noteSetFact(parentEntity)»« // TODO: add fact constraints for this case!!!
 ENDIF»«rel.target.name»'''
 	}
 	
+	def noteSetFact(Relationship relationship, Entity parentEntity) {
+		var b = new EntityRelationship();
+		b.relationship = relationship;
+		b.parentEntity = parentEntity;
+		bounds.add(b);
+		return ""
+	}
 	
 	def generateCodeLiteral(Literal l) 
 '''«l.name»'''
+
+	def generateRelationFactConstraints(ArrayList<EntityRelationship> missingBounds) {
+		''''''
+	}
 }
