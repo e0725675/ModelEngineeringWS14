@@ -34,6 +34,9 @@ class Form2HTMLGenerator implements IGenerator {
 				«generateHead(formModel)»
 					<body>					
 					«generateBody(formModel)»
+					
+					
+					
 					<!-- htmlelements -->
 «««					add HTML elements here
 					</body>
@@ -57,11 +60,28 @@ class Form2HTMLGenerator implements IGenerator {
 					«FOR form : formModel.forms»
 					«form.generateForm»
 					«ENDFOR»
+					
 «««				register HTML elements here
 				form.init();
 				});
 				</script>
 			</head>'''
+	}
+	
+	def JSgetRegulatExpression(){
+		'''
+«««		form.addWelcomeForm(«form.title»');
+«««			«FOR page : form.pages»
+«««							«FOR pageElement : page.pageElements»
+««««««								pageElement.textField.format
+««««««							«textField.generateForm»
+«««							if(pageElement instanceof TextField) {
+«««									pageElement.format
+«««								}
+«««							form.addRegularExpression('«pageElement.elementID»', '«pageElement»'.);	
+«««							«ENDFOR»
+«««						«ENDFOR»
+		'''
 	}
 	
 	def generateBody(FormModel zeeForms) {
@@ -91,13 +111,56 @@ class Form2HTMLGenerator implements IGenerator {
 	}
 		
 	def generateForm(Form zeeForm) {
+		
 		if(zeeForm.isWelcomeForm) {
 			'''form.addWelcomeForm('«zeeForm.name»')'''
 		} 
 		else {
-			'''form.addRelationshipPageElement('«zeeForm.name»')'''
+			for (Page page : zeeForm.pages){
+				for (PageElement pageElement : page.pageElements) {
+					
+					if (pageElement instanceof RelationshipPageElement) {
+  				  		RelationshipPageElement = pageElement as RelationshipPageElement		  		
+  				  		
+ 						} 
+ 						else if (pageElement instanceof AttributePageElement) {
+    					AttributePageElement = pageElement as AttributePageElement
+    					
+ 					}
+					
+					'''«pageElement.JSaddRelationshipPageElement»'''
+					
+				}
+			}
+				
+			«FOR pageElement : Page.pageElements»
+					
+			«ENDFOR»
+			
+			form.addRelationshipPageElement('«zeeForm.entity.name»', '«zeeForm.name»', '«zeeForm.entity.name»')'''
+			
 //			'Proceedings', '15', 'ProceedingsForm', 'list', '0', '1'
+
 		}
+	}
+	
+	def dispatch PageElement (RelationshipPageElement) {
+		
+	}
+	
+    def dispatch PageElement (AttributePageElement) {
+    	
+    }
+	
+	
+//	form.addRelationshipPageElement ('<ContainerPage.title>', '<RelationshipPageElement.elementID>', '<RelationshipPageElement.editingForm.title>',
+//'<type>', '<RelationshipPageElement.relationship.lowerBound>', '<RelationshipPageElement.relationship.upperBound>');
+	
+	
+	def JSaddRelationshipPageElement (PageElement Element) {
+		'''form.addRelationshipPageElement('«Element.label»', '«Element.elementID»', '«Element.elementID»', '«Element.TextField»
+		
+		'''
 	}
 	
 //	def dispatch generateForm(Enumeration zeeEnum) {
