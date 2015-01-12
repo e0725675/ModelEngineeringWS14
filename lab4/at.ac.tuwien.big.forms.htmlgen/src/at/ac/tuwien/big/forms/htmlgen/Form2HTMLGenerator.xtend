@@ -10,6 +10,7 @@ import at.ac.tuwien.big.forms.*
 import org.eclipse.emf.common.util.EList
 import java.util.EventObject
 import org.eclipse.emf.ecore.EObject
+import java.util.ArrayList
 
 class Form2HTMLGenerator implements IGenerator {
 	
@@ -29,7 +30,7 @@ class Form2HTMLGenerator implements IGenerator {
 				formModel = model.contents.get(0) as FormModel
 		}
 		val name = new File('output.html');
-	
+
 		fsa.generateFile(
 			name.toString,
 			'''<!DOCTYPE html>
@@ -56,9 +57,7 @@ class Form2HTMLGenerator implements IGenerator {
 	            <script type="text/javascript">
 	            $(document).ready(
 	            function(){
-	                «FOR form : formModel.forms»
-	                «form.generateJSForm»
-	                «ENDFOR»
+	                «formModel.generateJSForms()»
 	            form.init();
 	            });
 	            </script>
@@ -177,57 +176,73 @@ class Form2HTMLGenerator implements IGenerator {
 							<p><label for="«field.elementID»">«field.label»</label><input type="time" id="«field.elementID»"/></p>'''
 	}
 		
-	def generateJSForm(Form zeeForm) {
-		
-		if(zeeForm.isWelcomeForm) {
-			return '''form.addWelcomeForm('«zeeForm.name»')'''
-		} 
-		else {
+	def generateJSForms(FormModel formModel) {
+		var output = "";
+		for (Form zeeForm : formModel.forms) {
+			if(zeeForm.isWelcomeForm) {
+				output+= "form.addWelcomeForm('"+zeeForm.name+"')";
+			}
 			for (Page page : zeeForm.pages){
 				for (PageElement pageElement : page.pageElements) {
-					
-					if (pageElement instanceof RelationshipPageElement) {
-  				  		var rpe = pageElement as RelationshipPageElement		  		
-  				  		
- 						} 
- 						else if (pageElement instanceof AttributePageElement) {
-    					var ape = pageElement as AttributePageElement
-    					
+					if (pageElement instanceof TextField) {
+						if ((pageElement as TextField).format != null && !(pageElement as TextField).format.equals("")) {
+							var tf = (pageElement as TextField)
+							var ret = JSaddRegularExpression(tf);
+							output += "\r\n"+ret;
+						}
+ 					} else if( pageElement instanceof RelationshipPageElement) {
+						
+ 						output += "\r\n"+pageElement.JSaddRelationshipPageElement(page);
+ 						
+ 					} else {
+ 						// nothing
  					}
-					
-					return '''«pageElement.JSaddRelationshipPageElement»'''
+ 					System.out.println(pageElement.label+" "+pageElement.condition);
+					if (pageElement.condition != null) {
+						System.out.println("adding condition: "+pageElement.condition.conditionID);
+						var c = pageElement.condition;
+						if (c instanceof AttributeValueCondition) {
+							var ret = JSaddAttributeValueCondition(c,pageElement, page, null);
+							output+="\r\n"+ret;
+						} else if (c instanceof CompositeCondition) {
+							var ret = JSaddCompositeComposition(c as CompositeCondition, null, pageElement, page);
+							output+="\r\n"+ret;
+						} else {
+							System.out.println("nope");
+						}				
+					} else {
+						//System.out.println(pageElement.label+" condition null");
+					}
+					//return '''«pageElement.JSaddRelationshipPageElement()»'''
 					
 				}
 			}
-				
-//			«FOR pageElement : Page.pageElements»
-//					
-//			«ENDFOR»
-			
-//			form.addRelationshipPageElement('«zeeForm.entity.name»', '«zeeForm.name»', '«zeeForm.entity.name»')'''
-	
-			
-//			'Proceedings', '15', 'ProceedingsForm', 'list', '0', '1'
-
 		}
+		return output;
 	}
-	def JSaddRelationshipPageElement(PageElement pe) {
-		
+	def dispatch JSaddRelationshipPageElement(Table pe, Page containerPage) {
+'''
+form.addRelationshipPageElement ('<«containerPage.title»',«»'«pe.elementID»','«pe.editingForm.title»','table' ,'«pe.relationship.lowerBound»','«pe.relationship.upperBound»');
+'''
 	}
-	def JSgetRegulatExpression(){
-		'''
-«««		form.addWelcomeForm(«form.title»');
-«««			«FOR page : form.pages»
-«««							«FOR pageElement : page.pageElements»
-««««««								pageElement.textField.format
-««««««							«textField.generateForm»
-«««							if(pageElement instanceof TextField) {
-«««									pageElement.format
-«««								}
-«««							form.addRegularExpression('«pageElement.elementID»', '«pageElement»'.);	
-«««							«ENDFOR»
-«««						«ENDFOR»
-		'''
+	def dispatch JSaddRelationshipPageElement(List pe, Page containerPage) {
+'''form.addRelationshipPageElement ('<«containerPage.title»',«»'«pe.elementID»','«pe.editingForm.title»','list' ,'«pe.relationship.lowerBound»','«pe.relationship.upperBound»');'''
+	}
+	def JSaddAttributeValueCondition(AttributeValueCondition avc,PageElement containerpageElement, Page containerPage, CompositeCondition parentCondition) {
+'''form.addAttributeValueCondition('«avc.conditionID»',«IF parentCondition==null»null«ELSE»'«parentCondition.conditionID»'«ENDIF»,('«containerPage.title»' XOR '«containerpageElement.elementID»' ) ,'«avc.value»' ,'«avc.type»' );'''
+	}
+	
+	def JSaddCompositeComposition(CompositeCondition cc, CompositeCondition parentCondition,PageElement containerpageElement, Page containerPage) {
+'''form.addCompositeCondition('«cc.conditionID»',«IF parentCondition==null»null«ELSE»'«parentCondition.conditionID»'«ENDIF»,'«cc.type»');«IF (cc.composedConditions.size() > 0)»«
+FOR child : cc.composedConditions BEFORE '
+' SEPARATOR '
+'
+»«IF child instanceof AttributeValueCondition»«(child as AttributeValueCondition).JSaddAttributeValueCondition(containerpageElement, containerPage, cc)»«ELSE»«(child as CompositeCondition).JSaddCompositeComposition(cc,containerpageElement, containerPage)»«ENDIF»«ENDFOR»«ENDIF»'''
+	}
+	
+	
+	def JSaddRegularExpression(TextField tf){
+'''form.addRegularExpression('«tf.elementID»', '«tf.format»');'''
 	}
 	
 }
