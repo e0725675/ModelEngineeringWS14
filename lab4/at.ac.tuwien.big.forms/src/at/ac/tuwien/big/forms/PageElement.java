@@ -103,5 +103,4 @@ public interface PageElement extends EObject {
 	 */
 	void setElementID(String value);
 
-
 } // PageElement

@@ -202,10 +202,11 @@ class Form2HTMLGenerator implements IGenerator {
 						System.out.println("adding condition: "+pageElement.condition.conditionID);
 						var c = pageElement.condition;
 						if (c instanceof AttributeValueCondition) {
-							var ret = JSaddAttributeValueCondition(c,pageElement, page, null);
+							System.out.println("adding AttributeValueCondition: "+pageElement.condition.conditionID);
+							var ret = JSaddCondition(c,null, pageElement, page);
 							output+="\r\n"+ret;
 						} else if (c instanceof CompositeCondition) {
-							var ret = JSaddCompositeComposition(c as CompositeCondition, null, pageElement, page);
+							var ret = JSaddCondition(c as CompositeCondition, null, pageElement, page);
 							output+="\r\n"+ret;
 						} else {
 							System.out.println("nope");
@@ -221,23 +222,21 @@ class Form2HTMLGenerator implements IGenerator {
 		return output;
 	}
 	def dispatch JSaddRelationshipPageElement(Table pe, Page containerPage) {
-'''
-form.addRelationshipPageElement ('<«containerPage.title»',«»'«pe.elementID»','«pe.editingForm.title»','table' ,'«pe.relationship.lowerBound»','«pe.relationship.upperBound»');
-'''
+'''form.addRelationshipPageElement ('<«containerPage.title»',«»'«pe.elementID»','«pe.editingForm.title»','table' ,'«pe.relationship.lowerBound»','«pe.relationship.upperBound»');'''
 	}
 	def dispatch JSaddRelationshipPageElement(List pe, Page containerPage) {
 '''form.addRelationshipPageElement ('<«containerPage.title»',«»'«pe.elementID»','«pe.editingForm.title»','list' ,'«pe.relationship.lowerBound»','«pe.relationship.upperBound»');'''
 	}
-	def JSaddAttributeValueCondition(AttributeValueCondition avc,PageElement containerpageElement, Page containerPage, CompositeCondition parentCondition) {
-'''form.addAttributeValueCondition('«avc.conditionID»',«IF parentCondition==null»null«ELSE»'«parentCondition.conditionID»'«ENDIF»,('«containerPage.title»' XOR '«containerpageElement.elementID»' ) ,'«avc.value»' ,'«avc.type»' );'''
+	def dispatch JSaddCondition(AttributeValueCondition avc,CompositeCondition parentCondition, PageElement containerpageElement, Page containerPage) {
+'''form.addAttributeValueCondition('«avc.conditionID»',«IF parentCondition==null»null«ELSE»'«parentCondition.conditionID»'«ENDIF»,«containerpageElement.elementID»' ,'«avc.value»' ,'«avc.type»' );'''
 	}
 	
-	def JSaddCompositeComposition(CompositeCondition cc, CompositeCondition parentCondition,PageElement containerpageElement, Page containerPage) {
+	def dispatch JSaddCondition(CompositeCondition cc, CompositeCondition parentCondition,PageElement containerpageElement, Page containerPage) {
 '''form.addCompositeCondition('«cc.conditionID»',«IF parentCondition==null»null«ELSE»'«parentCondition.conditionID»'«ENDIF»,'«cc.type»');«IF (cc.composedConditions.size() > 0)»«
 FOR child : cc.composedConditions BEFORE '
 ' SEPARATOR '
 '
-»«IF child instanceof AttributeValueCondition»«(child as AttributeValueCondition).JSaddAttributeValueCondition(containerpageElement, containerPage, cc)»«ELSE»«(child as CompositeCondition).JSaddCompositeComposition(cc,containerpageElement, containerPage)»«ENDIF»«ENDFOR»«ENDIF»'''
+»«IF child instanceof AttributeValueCondition»«(child as AttributeValueCondition).JSaddCondition(cc, containerpageElement, containerPage)»«ELSE»«(child as CompositeCondition).JSaddCondition(cc,containerpageElement, containerPage)»«ENDIF»«ENDFOR»«ENDIF»'''
 	}
 	
 	
